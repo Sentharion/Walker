@@ -5,12 +5,13 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { View, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text } from 'react-native';
+import { useWalkStore } from '@/store/walkStore';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const walksCount = 1;
+  const name = useWalkStore((state) => state.name);
+  const difficulty = useWalkStore((state) => state.difficulty);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -22,7 +23,54 @@ export default function RootLayout() {
             headerTitle: () => (
               <View className="items-center py-3">
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Moje spacery</Text>
-                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>Zapisane spacery: {walksCount}</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>Zapisane spacery: 1000</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#10b981",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="map"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-3">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Zaplanuj swój spacer</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#10b981",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="mapDetails"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-3">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Szczegóły spaceru</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>Ustaw nazwę i trudność spaceru</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#10b981",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="savedWalk"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-3">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>{name}</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>{difficulty}</Text>
               </View>
             ),
             headerTitleAlign: "center",

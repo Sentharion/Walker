@@ -4,7 +4,12 @@ module.exports = {
   content: ["./App.ts", "./app/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      borderRadius: {
+        '4xl': '32px',
+        '5xl': '40px',
+      }
+    },
   },
   plugins: [],
 }

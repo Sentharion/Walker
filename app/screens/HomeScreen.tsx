@@ -2,13 +2,39 @@ import { View, ScrollView, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import HomeStats from '../components/HomeStats';
 import WalkStartButton from '../components/WalkStartButton';
-import WeatherWidget from '../components/WeatherWidget';
+import WeatherWidget, { WeatherData } from '../components/WeatherWidget';
 import WelcomeWidget from '../components/WelcomeWidget';
-import MyWalks from '../components/MyWalks';;
+import MyWalks from '../components/MyWalks';
+import { useState,useEffect } from 'react';
+import { getWeather } from '../../utils/weather';
 
 
 const { height } = Dimensions.get('window');
 const HomeScreen = () => {
+
+    const [weather,setWeather] = useState<WeatherData>();
+    const [error, setError] = useState('');
+
+
+    useEffect(() => {
+        const fetchWeather = async () => {
+           try {
+            const data = await getWeather();
+            setWeather({
+                temperature: Math.round(data.main.temp),
+                humidity: Math.round(data.main.humidity),
+                wind: Math.round(data.wind.speed),
+                uvIndex: Math.round(data.main.uvi || 0),
+                description: data.weather[0].description,
+                weatherEmoji: data.weather[0].icon,
+            });
+           } catch (error) {
+            console.log(error);
+            setError(error instanceof Error ? error.message : 'Błąd pobierania pogody');
+           }
+        };
+        fetchWeather();
+    }, []);
     return (
         <ScrollView>
             <View className="py-3.5 px-1 relative">
@@ -26,7 +52,7 @@ const HomeScreen = () => {
             </View>
 
             <View className="px-7 mt-64">
-                <WeatherWidget />
+                {weather && <WeatherWidget weatherData={weather} />}
             </View>
 
             <View className="px-7 mt-6">
