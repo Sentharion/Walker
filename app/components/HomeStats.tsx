@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 
 const distance = 3.2;
 const time = 30;
+const steps = 10000;
 const calories = 215;
 
 const HomeStats = () => {
@@ -13,6 +14,10 @@ const HomeStats = () => {
                 <View className='flex-1 items-start justify-center bg-white/20 overflow-hidden p-3 rounded-lg gap-1'>
                     <Text className='text-xs text-white'>Czas</Text>
                     <Text className='text-md font-bold text-white'><Text className='font-bold text-lg'>{time}</Text> min</Text>
+                </View>
+                <View className='flex-1 items-start justify-center bg-white/20 overflow-hidden p-3 rounded-lg gap-1'>
+                    <Text className='text-xs text-white'>Kroki</Text>
+                    <Text className='text-md font-bold text-white'><Text className='font-bold text-lg'>{steps}</Text></Text>
                 </View>
                 <View className='flex-1 items-start justify-center bg-white/20 overflow-hidden p-3 rounded-lg gap-1'>
                     <Text className='text-xs text-left text-white'>Spalone kalorie</Text>
