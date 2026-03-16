@@ -1,16 +1,73 @@
 import { View, Text } from 'react-native';
 import { Cloud, Droplets, Wind, Sun } from 'lucide-react-native';
+import { useEffect,useState } from 'react';
+import * as Location from 'expo-location';
+import { OPENWEATHER_API_KEY } from '@env';
 
-export interface WeatherData {
+interface WeatherData {
     temperature: number;
     humidity: number;
     wind: number;
     uvIndex: number;
-    description: string;
+    conditions: string;
     weatherEmoji: string;
 }
 
-const WeatherWidget = ({weatherData}: {weatherData: WeatherData}) => {
+const WeatherWidget = () => {
+    const [weatherData,setWeatherData] = useState<WeatherData | null>(null);
+    const [loading,setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWeather = async () => {
+            try {
+                const status = await Location.requestForegroundPermissionsAsync();
+                if (status.status !== 'granted') {
+                    console.warn('Brak pozwolenia na dostęp do lokalizacji');
+                    setLoading(false);
+                    return;
+                }
+                const location = await Location.getCurrentPositionAsync({});
+                const {latitude,longitude} = location.coords;
+                
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const current = data.current;
+                setWeatherData({
+                    temperature: current.temp,
+                    humidity: current.humidity,
+                    wind: current.wind_speed,
+                    uvIndex: current.uvi,
+                    weatherEmoji: current.weather[0].icon,
+                    conditions: current.weather[0].description,
+                });
+                
+            } catch (error) {
+                console.error("Błąd pobierania pogody:",error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWeather();
+    }, []);
+
+    if(loading) {
+        return (
+            <View className='bg-white shadow-md rounded-xl p-5'>
+                <Text className='text-2xl font-extrabold text-black'>Ładowanie pogody...</Text>
+            </View>
+        );
+    }
+
+    if(!weatherData) {
+        return (
+            <View className='bg-white shadow-md rounded-xl p-5'>
+                <Text className='text-2xl font-extrabold text-black'>Nie udało się pobrać pogody</Text>
+            </View>
+        );
+    }
+
     return (
         <View className='bg-white shadow-md rounded-xl p-5'>
             <View className='flex-row items-center justify-between'>
@@ -21,7 +78,7 @@ const WeatherWidget = ({weatherData}: {weatherData: WeatherData}) => {
                 <Text className='text-5xl'>{weatherData.weatherEmoji}</Text>
                 <View className='flex-col items-start justify-center'>
                     <Text className='text-3xl font-bold'>{weatherData.temperature}°C</Text>
-                    <Text className='text-md text-gray-500' numberOfLines={1}>{weatherData.description}</Text>
+                    <Text className='text-md text-gray-500' numberOfLines={1}>{weatherData.conditions}</Text>
                 </View>
             </View>
             <View className='flex-row items-center justify-between gap-3 border-t border-gray-200 pt-3 mt-3'>

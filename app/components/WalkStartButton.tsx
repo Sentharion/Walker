@@ -2,15 +2,13 @@ import { View, TouchableOpacity, Text, ImageBackground, Dimensions } from 'react
 import { LinearGradient } from 'expo-linear-gradient';
 import walkIMG from "../../assets/images/walk.png";
 import { Navigation } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
 
 const { height} = Dimensions.get('window');
 
 const WalkStartButton = () => {
-    const router = useRouter();
     return (
         <View className='w-full absolute' style={{ top: height * 0.308, paddingHorizontal: 28 }}>
-            <TouchableOpacity className='w-full overflow-hidden rounded-3xl shadow-lg' style={{ height: height * 0.23 }} activeOpacity={0.8} onPress={() => router.push('/map')}>
+            <TouchableOpacity className='w-full overflow-hidden rounded-3xl shadow-lg' style={{ height: height * 0.23 }} activeOpacity={0.8}>
                 <LinearGradient
                     colors={['#a7f3d0', '#5eead4']}
                     className='absolute inset-0'
