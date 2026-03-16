@@ -22,3 +22,15 @@ export const getWalks = async () => {
         return [];
     }
 };
+export const removeWalk = async (id: string) => {
+    try {
+        const existing = await AsyncStorage.getItem(WALKS_STORAGE_KEY);
+        if (existing) {
+            const walks = JSON.parse(existing);
+            const filtered = walks.filter((w: any) => w.id !== id);
+            await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(filtered));
+        }
+    } catch (error) {
+        console.log("Błąd usuwania spaceru", error);
+    }
+};

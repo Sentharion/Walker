@@ -14,12 +14,14 @@ type WalkState = {
   isWalking: boolean;
   name: string;
   difficulty: "Łatwy" | "Średni" | "Trudny" | "";
+  note:string;
 
   setPoints: (points: Point[]) => void;
   addPoint: (point: Point) => void;
   setDistance: (distance: number) => void;
   setName: (name: string) => void;
   setDifficulty: (difficulty: "Łatwy" | "Średni" | "Trudny" | "") => void;
+  setNote: (note: string) => void;
 
   startWalk: () => void;
   stopWalk: () => void;
@@ -35,6 +37,7 @@ export const useWalkStore = create<WalkState>((set) => ({
   isWalking: false,
   name: "",
   difficulty: "",
+  note: "",
 
   setPoints: (points) => set({ points }),
 
@@ -66,8 +69,12 @@ export const useWalkStore = create<WalkState>((set) => ({
       steps: 0,
       calories: 0,
       isWalking: false,
+      name: "",
+      difficulty: "",
+      note: "",
     }),
 
     setName: (name) => set({ name }),
     setDifficulty: (difficulty) => set({ difficulty }),
+    setNote: (note) => set({ note }),
 }));

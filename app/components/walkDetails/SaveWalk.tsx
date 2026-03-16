@@ -2,7 +2,8 @@ import { TouchableOpacity,View,Text } from "react-native";
 import { useRouter } from "expo-router";
 import { saveWalk } from "@/utils/walksStorage";
 import { Point } from "@/store/walkStore";
-
+import { useWalkStore } from "@/store/walkStore";
+import { useSavedWalkStore,type SavedWalk } from "@/store/savedStore";
 interface SaveWalkProps{
     distance: number;
     points: Point[];
@@ -10,20 +11,29 @@ interface SaveWalkProps{
 
 const SaveWalk = ({distance,points}:SaveWalkProps) => {
     const router = useRouter();
+    const addSavedWalk = useSavedWalkStore((state) => state.addSavedWalk);
+    const name = useWalkStore((state) => state.name);
+    const difficulty = useWalkStore((state) => state.difficulty);
+    const note = useWalkStore((state) => state.note);
+    const resetWalk = useWalkStore((state) => state.resetWalk);
     const handleSaveWalk = async () => {
-        const newWalk = {
+        const newWalk:SavedWalk = {
             id: Date.now().toString(),
-            name: "Nowy spacer",
+            name: name ||"Nowy spacer",
+            difficulty: difficulty || "Średni",
             distance,
+            note:note || "",
             points,
-            time:"0 min",
-            steps:"0",
-            calories:"0",
+            duration:0,
+            steps:0,
+            calories:0,
             finished:false,
             createdAt: new Date().toISOString(),
         };
         await saveWalk(newWalk);
 
+        addSavedWalk(newWalk);
+        resetWalk();
         router.replace("/");
     };
     return (
