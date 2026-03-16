@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "walker",
+    "entryPoint": "node_modules/expo-router/entry.js",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

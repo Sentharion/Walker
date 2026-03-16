@@ -1,4 +1,3 @@
-
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -11,8 +10,8 @@ import { useSavedWalkStore } from '@/store/savedStore';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const name = useSavedWalkStore((state) => state.selectedWalk?.name);
-  const difficulty = useSavedWalkStore((state) => state.selectedWalk?.difficulty);
+  const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
+  const difficulty = useSavedWalkStore((state: any) => state.selectedWalk?.difficulty);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

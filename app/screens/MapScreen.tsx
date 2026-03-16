@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker , Polyline} from "react-native-maps";
 import { useRouter } from "expo-router";
