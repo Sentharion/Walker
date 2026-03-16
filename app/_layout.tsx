@@ -23,7 +23,6 @@ export default function RootLayout() {
             headerTitle: () => (
               <View className="items-center py-3">
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Moje spacery</Text>
-                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>Zapisane spacery: 1000</Text>
               </View>
             ),
             headerTitleAlign: "center",

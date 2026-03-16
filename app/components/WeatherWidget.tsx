@@ -3,7 +3,6 @@ import { Cloud, Droplets, Wind, Sun } from 'lucide-react-native';
 import { useEffect,useState } from 'react';
 import * as Location from 'expo-location';
 
-
 interface WeatherData {
     temperature: number;
     humidity: number;
@@ -12,9 +11,7 @@ interface WeatherData {
     conditions: string;
     weatherEmoji: string;
 }
-
-const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
-
+const OPENWEATHER_API_KEY = process.env.EXPO_PUBLIC_OPENWEATHER_API_KEY;
 const WeatherWidget = () => {
     const [weatherData,setWeatherData] = useState<WeatherData | null>(null);
     const [loading,setLoading] = useState(true);

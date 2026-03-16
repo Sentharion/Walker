@@ -45,7 +45,7 @@ const WalkCard = ({walk}: WalkCardProps) => {
 
     return (
         <View className="w-full py-2">
-            <View className="bg-white rounded-3xl shadow-xl shadow-black/50 elevation-12 mx-2 mb-5 z-10">
+            <View className="bg-white rounded-3xl shadow-xl shadow-black/50 elevation-12 mx-2 mb-1 z-10">
                 <View className="rounded-3xl overflow-hidden">
                     <LinearGradient 
                         colors={['#059669', '#2dd4bf', '#0ea5e9']} 

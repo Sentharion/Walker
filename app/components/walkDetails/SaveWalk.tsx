@@ -1,8 +1,7 @@
 import { TouchableOpacity,View,Text } from "react-native";
 import { useRouter } from "expo-router";
 import { saveWalk } from "@/utils/walksStorage";
-import { Point } from "@/store/walkStore";
-import { useWalkStore } from "@/store/walkStore";
+import { useWalkStore, type Point } from "@/store/walkStore";
 import { useSavedWalkStore,type SavedWalk } from "@/store/savedStore";
 interface SaveWalkProps{
     distance: number;
