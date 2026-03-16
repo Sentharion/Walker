@@ -1,18 +1,29 @@
+// components/CustomTabBar.tsx
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Home, TrendingUp, Target, User, Settings } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter, usePathname } from "expo-router";
 
-const tabs = [
-  { name: "stats", label: "Stats", Icon: TrendingUp },
-  { name: "goals", label: "Goals", Icon: Target },
-  { name: "index", label: "Home", Icon: Home, center: true },
-  { name: "profile", label: "Profile", Icon: User },
-  { name: "settings", label: "Settings", Icon: Settings },
+interface Tab {
+  name: string;
+  label: string;
+  Icon: React.ComponentType<{ size?: number; color?: string ,className?: string }>;
+  center?: boolean;
+  href: "/stats" | "/goals" | "/profile" | "/settings" | "/";
+}
+const tabs: Tab[] = [
+  { name: "index", label: "Home", Icon: Home, center: true, href: "/"},
+  { name: "stats", label: "Stats", Icon: TrendingUp, href: "/stats"},
+  { name: "goals", label: "Goals", Icon: Target, href: "/goals"},
+  { name: "profile", label: "Profile", Icon: User, href: "/profile"},
+  { name: "settings", label: "Settings", Icon: Settings, href: "/settings"},
 ];
 
-export default function CustomTabBar({ state, navigation }: any) {
+export default function CustomTabBar() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const pathname = usePathname(); // aktualna ścieżka
 
   return (
     <LinearGradient
@@ -20,7 +31,7 @@ export default function CustomTabBar({ state, navigation }: any) {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       style={{
-        paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
+        paddingBottom: Platform.OS === "ios" ? insets.bottom : 12,
         paddingTop: 12,
         elevation: 0,
         borderTopWidth: 0,
@@ -28,25 +39,13 @@ export default function CustomTabBar({ state, navigation }: any) {
     >
       <View className="flex-row items-end px-6 pb-2">
         {tabs.map((tab) => {
-          const routeIndex = state.routes.findIndex((r: any) => r.name === tab.name);
-          const route = state.routes[routeIndex];
-          const isFocused = state.index === routeIndex;
+          const isFocused = tab.href || (tab.name === "index" && pathname === "/");
 
           const onPress = () => {
-            if (!route) return;
-            
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(tab.name);
+            if (!isFocused) {
+              router.replace(tab.href);
             }
           };
-
-          if (!route) return null;
 
           if (tab.center) {
             return (
@@ -55,17 +54,13 @@ export default function CustomTabBar({ state, navigation }: any) {
                 onPress={onPress}
                 activeOpacity={0.8}
                 className="flex-1 items-center justify-center -mt-9"
-                disabled={isFocused}
               >
                 <View
                   className={`w-[68px] h-[68px] rounded-full items-center justify-center shadow-lg mb-1 ${
                     isFocused ? "bg-white" : "bg-emerald-600"
                   }`}
                 >
-                  <tab.Icon
-                    size={32}
-                    color={isFocused ? "#059669" : "white"}
-                  />
+                  <tab.Icon size={32} color={isFocused ? "#059669" : "white"} />
                 </View>
                 <Text
                   className={`text-xs font-medium ${
@@ -84,14 +79,9 @@ export default function CustomTabBar({ state, navigation }: any) {
               onPress={onPress}
               activeOpacity={0.7}
               className="flex-1 items-center justify-center py-2"
-              disabled={isFocused}
             >
               <View className={`items-center ${isFocused ? "scale-110" : ""}`}>
-                <tab.Icon
-                  size={24}
-                  color={isFocused ? "white" : "#d1fae5"}
-                  className="mb-1"
-                />
+                <tab.Icon size={24} color={isFocused ? "white" : "#d1fae5"} className="mb-1" />
                 <Text
                   className={`text-xs font-medium ${
                     isFocused ? "text-white" : "text-emerald-100"
@@ -99,9 +89,7 @@ export default function CustomTabBar({ state, navigation }: any) {
                 >
                   {tab.label}
                 </Text>
-                {isFocused && (
-                  <View className="w-1 h-1 bg-white rounded-full mt-1" />
-                )}
+                {isFocused && <View className="w-1 h-1 bg-white rounded-full mt-1" />}
               </View>
             </TouchableOpacity>
           );
