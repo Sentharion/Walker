@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatsScreen from "../screens/StatsScreen";
 
 export default function Stats() {
     return (
-        <View>
-            <Text>Stats</Text>
-        </View>
+        <SafeAreaView>
+            <StatsScreen />
+        </SafeAreaView>
     );
 }

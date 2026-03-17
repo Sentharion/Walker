@@ -6,6 +6,7 @@ module.exports = function (api) {
       "nativewind/babel",
     ],
     plugins: [
-    ],
+      process.env.NODE_ENV === "development" && "react-refresh/babel",
+    ].filter(Boolean), // usuwa wartości false
   };
 };
