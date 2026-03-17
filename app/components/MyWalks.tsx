@@ -1,5 +1,5 @@
-import { ChevronRight, Footprints } from "lucide-react-native";
-import React, { useState } from "react";
+import { ChevronRight } from "lucide-react-native";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useSavedWalkStore } from "@/store/savedStore";
@@ -9,7 +9,7 @@ const MyWalks = () => {
     const router = useRouter();
     const savedWalks = useSavedWalkStore((state: any) => state.savedWalks);
     return (
-        <View className="bg-white shadow-md rounded-xl p-5 gap-2">
+        <View className="bg-white shadow-md rounded-xl p-5 gap-2 mb-20">
             <View className='flex-row items-center justify-between mb-1'>
                 <Text className='text-2xl font-extrabold text-black'>Moje spacery</Text>
                {savedWalks.length > 3 && (
