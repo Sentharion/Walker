@@ -6,7 +6,7 @@ import { ScrollView } from "react-native";
 const MyWalksScreen = () => {
     const savedWalks = useSavedWalkStore((state: any) => state.savedWalks);
     return (
-        <ScrollView className="flex flex-col bg-gray-50 px-3 py-2 mt-3">
+        <ScrollView className="flex flex-col px-3 py-2 mt-3">
             {savedWalks.map((walk: any) => (
                 <WalkCard key={walk.id} walk={walk} />
             ))}

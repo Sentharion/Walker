@@ -84,6 +84,21 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="months"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-3">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Miesięczna aktywność</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#10b981",
+            },
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
 
