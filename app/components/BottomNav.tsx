@@ -13,9 +13,9 @@ interface Tab {
   href: "/stats" | "/goals" | "/profile" | "/settings" | "/";
 }
 const tabs: Tab[] = [
-  { name: "index", label: "Home", Icon: Home, center: true, href: "/"},
   { name: "stats", label: "Stats", Icon: TrendingUp, href: "/stats"},
   { name: "goals", label: "Goals", Icon: Target, href: "/goals"},
+  { name: "index", label: "Home", Icon: Home, center: true, href: "/"},
   { name: "profile", label: "Profile", Icon: User, href: "/profile"},
   { name: "settings", label: "Settings", Icon: Settings, href: "/settings"},
 ];
@@ -31,15 +31,15 @@ export default function CustomTabBar() {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       style={{
-        paddingBottom: Platform.OS === "ios" ? insets.bottom : 12,
+        paddingBottom: Platform.OS === "ios" ? insets.bottom + 12 : 12,
         paddingTop: 12,
         elevation: 0,
         borderTopWidth: 0,
       }}
     >
-      <View className="flex-row items-end px-6 pb-2">
+      <View className="flex-row items-end px-6 pb-2" style={{paddingBottom: Platform.OS === "ios" ? insets.bottom : 26,}}>
         {tabs.map((tab) => {
-          const isFocused = tab.href || (tab.name === "index" && pathname === "/");
+          const isFocused = tab.href === pathname;
 
           const onPress = () => {
             if (!isFocused) {

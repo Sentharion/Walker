@@ -12,6 +12,49 @@ interface WeatherData {
     weatherEmoji: string;
 }
 const OPENWEATHER_API_KEY = process.env.EXPO_PUBLIC_OPENWEATHER_API_KEY;
+const iconToEmoji: Record<string, string> = {
+  '01d': '☀️', // clear sky day
+  '01n': '🌙', // clear sky night
+  '02d': '🌤', // few clouds day
+  '02n': '☁️🌙', 
+  '03d': '☁️', // scattered clouds
+  '03n': '☁️',
+  '04d': '☁️☁️', // broken clouds
+  '04n': '☁️☁️',
+  '09d': '🌧', // shower rain
+  '09n': '🌧',
+  '10d': '🌦', // rain day
+  '10n': '🌧',
+  '11d': '⛈', // thunderstorm
+  '11n': '⛈',
+  '13d': '❄️', // snow
+  '13n': '❄️',
+  '50d': '🌫', // mist
+  '50n': '🌫',
+};
+
+const WalkingMessage = (weatherData: WeatherData | null) => {
+    if(!weatherData) {
+        return 'Brak danych o pogodzie';
+    }
+    if(weatherData.conditions.includes('deszcz') || weatherData.conditions.includes('mżawka') || weatherData.conditions.includes('burza') || weatherData.conditions.includes('śnieg') || weatherData.conditions.includes('deszcz ze śniegiem')) {
+        return '🌧 Lepiej zostań w domu...';
+    } else if(weatherData.temperature > 25) {
+        return '🌡️ Gorąco, pamiętaj o piciu wody!';
+    } else if(weatherData.wind > 10) {
+        return '💨 Uważaj na silny wiatr!';
+    } else if(weatherData.uvIndex > 7) {
+        return '☀️ Uważaj na promieniowanie UV!';
+    } else if(weatherData.humidity > 70) {
+        return '💦 Wilgotno, może padać!';
+    } else if(weatherData.temperature < 10) {
+        return '🥶 Zimno, ubierz się ciepło!';
+    } else if(weatherData.temperature >= 15 && weatherData.temperature <= 25 && weatherData.wind <= 10 && weatherData.uvIndex <= 7 && weatherData.humidity <= 70) {
+        return '✨ Idealne warunki na spacer!';
+    } else {
+        return '🙂 Pogoda w porządku na spacer!';
+    }
+}
 const WeatherWidget = () => {
     const [weatherData,setWeatherData] = useState<WeatherData | null>(null);
     const [loading,setLoading] = useState(true);
@@ -28,18 +71,21 @@ const WeatherWidget = () => {
                 const location = await Location.getCurrentPositionAsync({});
                 const {latitude,longitude} = location.coords;
                 
-                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=pl`;
                 const response = await fetch(url);
                 const data = await response.json();
 
-                const current = data.current;
+                const UVurl = `https://api.openweathermap.org/data/2.5/uvi?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}`;
+                const UVresponse = await fetch(UVurl);
+                const UVdata = await UVresponse.json();
+
                 setWeatherData({
-                    temperature: current.temp,
-                    humidity: current.humidity,
-                    wind: current.wind_speed,
-                    uvIndex: current.uvi,
-                    weatherEmoji: current.weather[0].icon,
-                    conditions: current.weather[0].description,
+                    temperature: data.main.temp,
+                    humidity: data.main.humidity,
+                    wind: data.wind.speed,
+                    uvIndex: UVdata.value,
+                    weatherEmoji: iconToEmoji[data.weather[0].icon] || '☀️',
+                    conditions: data.weather[0].description,
                 });
                 
             } catch (error) {
@@ -84,12 +130,12 @@ const WeatherWidget = () => {
                 <View className='flex-col items-center justify-center gap-1 p-2'>
                     <Droplets size={18} color="blue" />
                     <Text className='text-md text-gray-500'>Wilgotność</Text>
-                    <Text className='text-xl font-bold'>{weatherData.humidity}</Text>
+                    <Text className='text-xl font-bold'>{weatherData.humidity}%</Text>
                 </View>
                 <View className='flex-col items-center justify-center gap-1 p-2'>
                     <Wind size={18} color="#10b981" />
                     <Text className='text-md text-gray-500'>Wiatr</Text>
-                    <Text className='text-xl font-bold'>{weatherData.wind}</Text>
+                    <Text className='text-xl font-bold'>{weatherData.wind} km/h</Text>
                 </View>
                 <View className='flex-col items-center justify-center gap-1 p-2'>
                     <Sun size={18} color="gold" />
@@ -98,7 +144,7 @@ const WeatherWidget = () => {
                 </View>
             </View>
             <View className='flex items-center justify-center bg-emerald-50 rounded-2xl p-2 mt-3 h-14'>
-                <Text className='text-emerald-700 text-center text-md'>✨ Idealne warunki na spacer!</Text>
+                <Text className='text-emerald-700 text-center text-md'>{WalkingMessage(weatherData)}</Text>
             </View>
         </View>
     );

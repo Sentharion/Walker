@@ -1,20 +1,17 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import '../global.css';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { View, Text } from 'react-native';
 import { useSavedWalkStore } from '@/store/savedStore';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
   const difficulty = useSavedWalkStore((state: any) => state.selectedWalk?.difficulty);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
@@ -90,6 +87,6 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style="auto" />
 
-    </ThemeProvider>
+    </>
   );
 }
