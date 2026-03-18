@@ -4,7 +4,7 @@ import HomeStats from '../components/HomeStats';
 import WalkStartButton from '../components/WalkStartButton';
 import WeatherWidget from '../components/WeatherWidget';
 import WelcomeWidget from '../components/WelcomeWidget';
-import MyWalks from '../components/MyWalks';;
+import MyWalks from '../components/MyWalks';
 
 
 const { height } = Dimensions.get('window');

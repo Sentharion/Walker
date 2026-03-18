@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import StatsHeader from "../components/stats/StatsHeader";
 import ThisWeekStats from "../components/stats/ThisWeekStats";
@@ -8,7 +8,7 @@ import DailyActivity from "../components/stats/DailyAcitivity";
 
 const StatsScreen = () => {
     return (
-        <ScrollView className="bg-gray-50"> 
+        <ScrollView className="bg-gray-50 h-full"> 
             <View className="py-10 px-1">
                 <LinearGradient
                     colors={['#3b82f6', '#9333ea']}

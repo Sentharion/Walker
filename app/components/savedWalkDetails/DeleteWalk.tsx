@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { Trash2 } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -10,13 +10,14 @@ const DeleteWalk = () => {
     const removeSavedWalk = useSavedWalkStore((state) => state.removeSavedWalk);
     const handleRemoveWalk = async () => {
         if (selectedWalk) {
-            await removeWalk(selectedWalk.id);
-            removeSavedWalk(selectedWalk.id);
-            router.back();
+            Alert.alert("Usuń spacer", "Czy na pewno chcesz usunąć ten spacer?", [
+                { text: "Nie", style: "cancel" },
+                { text: "Tak", onPress: () => {removeWalk(selectedWalk.id); removeSavedWalk(selectedWalk.id); router.back();} }
+            ]);
         }
     };
     return (
-        <TouchableOpacity className="flex-row items-center justify-center bg-red-100 rounded-3xl my-6 mx-8 px-5 py-5 gap-3 border border-red-500" onPress={handleRemoveWalk}>
+        <TouchableOpacity className="flex-row items-center justify-center bg-red-100 rounded-3xl my-6 mx-8 px-5 py-5 gap-3 border border-red-500 mb-20" onPress={handleRemoveWalk}>
             <View className="flex-row items-center justify-center gap-3">
                 <Trash2 size={24} color="red" />
             </View>

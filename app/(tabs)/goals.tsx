@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import GoalsScreen from "../screens/GoalsScreen";
 
 export default function Goals() {
     return (
-        <View>
-            <Text>Goals</Text>
-        </View>
+        <SafeAreaView>
+            <GoalsScreen />
+        </SafeAreaView>
     );
 }

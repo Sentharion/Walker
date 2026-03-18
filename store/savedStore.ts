@@ -1,3 +1,4 @@
+import { getWalks } from "@/utils/walksStorage";
 import { create } from "zustand";
 
 type Point = {
@@ -26,6 +27,7 @@ type walkStore = {
     selectedWalk: SavedWalk | null;
     setSelectedWalk: (walk: SavedWalk) => void;
     updateWalkNote: (id: string, note: string) => void;
+    loadSavedWalks: () => Promise<void>;
 };
 
 export const useSavedWalkStore = create<walkStore>((set) => ({
@@ -41,4 +43,14 @@ export const useSavedWalkStore = create<walkStore>((set) => ({
         savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, note } : w),
         selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, note } : state.selectedWalk
     })),
+    loadSavedWalks: async () => {
+        const walks = await getWalks();
+       try{
+        if (walks) {
+            set({ savedWalks: walks });
+        }
+       }catch(error){
+        console.log(error, "Błąd podczas ładowania zapisanych spacerów");
+       }
+    },
 }));

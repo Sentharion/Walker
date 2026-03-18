@@ -88,7 +88,7 @@ export default function RootLayout() {
           name="months"
           options={{
             headerTitle: () => (
-              <View className="items-center py-3">
+              <View className="items-center py-5">
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Miesięczna aktywność</Text>
               </View>
             ),
@@ -96,6 +96,22 @@ export default function RootLayout() {
             headerTintColor: "white",
             headerStyle: {
               backgroundColor: "#10b981",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="goal"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-5">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Utwórz nowy cel</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8 }}>Wyznacz. Skup się. Osiągnij.</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#f59e0b",
             },
           }}
         />

@@ -12,7 +12,7 @@ const WalkDifficulty = () => {
     const {difficulty,setDifficulty} = useWalkStore();
 
     return (
-        <View className="bg-white shadow-xl shadow-black/20 elevation-10 rounded-4xl my-6 mx-8 p-5 gap-4">
+        <View className="bg-white shadow-xl shadow-black/20 elevation-10 rounded-3xl my-6 mx-8 p-6 gap-4">
             <View className="flex-row items-center gap-2">
                 <TrendingUp size={24} color="gray" />
                 <Text className="text-md text-gray-700 font-bold opacity-90">Poziom trudności</Text>
