@@ -1,6 +1,5 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import MonthCard from "../components/stats/MonthCard";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 
 const months = [
     "Styczeń",
@@ -19,10 +18,12 @@ const months = [
 
 const MonthsScreen = () => {
     return (
-            <ScrollView className="flex-1 flex-col gap-5 px-6 py-6">
-                {months.map((month) => (
-                    <MonthCard key={month} month={month} walks={10} distance={10} time={10} calories={10} steps={10} />
-                ))}
+            <ScrollView className="flex flex-col gap-5 px-6 py-6">
+                <View className="flex flex-col gap-5">
+                    {months.map((month) => (
+                        <MonthCard key={month} month={month} walks={10} distance={10} time={10} calories={10} steps={10} />
+                    ))}
+                </View>
             </ScrollView>
     );
 };

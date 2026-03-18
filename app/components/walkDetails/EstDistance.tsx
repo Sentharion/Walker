@@ -7,7 +7,7 @@ interface EstDistanceProps {
 
 const EstDistance = ({ distance }: EstDistanceProps) => {
     return (
-        <View className="bg-white shadow-xl shadow-black/40 elevation-8 rounded-3xl my-6 mx-8 overflow-hidden">
+        <View className="bg-white shadow-lg rounded-3xl my-6 mx-8 overflow-hidden">
             <LinearGradient
                 colors={['#10b981', '#14b8a6']}
                 className='absolute inset-0 rounded-3xl'

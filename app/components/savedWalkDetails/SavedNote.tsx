@@ -22,7 +22,7 @@ const SavedNote = () => {
     };
 
     return (
-        <View className="bg-white shadow-xl shadow-black/20 elevation-15 rounded-4xl my-6 mx-8 p-5 gap-3">
+        <View className="bg-white shadow-xl shadow-black/20 elevation-15 rounded-3xl my-6 mx-8 p-6 gap-3">
            <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center gap-2">
                     <Notebook size={24} color="gray" />

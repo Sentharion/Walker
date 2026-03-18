@@ -36,7 +36,7 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
         router.replace("/");
     };
     return (
-        <View className="bg-white justify-end w-full pb-8 pt-4 gap-3 border-t border-gray-200 shadow-sm">
+        <View className="bg-white justify-end w-full pb-8 pt-4 mt- gap-3 border-t border-gray-200 shadow-sm">
             <TouchableOpacity className="my-2 mx-8 bg-green-500 rounded-3xl py-4" activeOpacity={0.8} onPress={handleSaveWalk}>
                 <Text className="text-white text-center text-lg font-bold">Zapisz spacer</Text>
             </TouchableOpacity>

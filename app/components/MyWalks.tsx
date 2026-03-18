@@ -4,10 +4,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useSavedWalkStore } from "@/store/savedStore";
 import WalkCard from "./WalkCard";
+import { useEffect } from "react";
 
 const MyWalks = () => {
     const router = useRouter();
-    const savedWalks = useSavedWalkStore((state: any) => state.savedWalks);
+    const {savedWalks, loadSavedWalks} = useSavedWalkStore();
+    useEffect(() => {
+        loadSavedWalks();
+    }, []);
     return (
         <View className="bg-white shadow-md rounded-xl p-5 gap-2 mb-20">
             <View className='flex-row items-center justify-between mb-1'>

@@ -7,7 +7,7 @@ const StartWalks = () => {
         <>
        {
         !selectedWalk?.finished ? (
-            <View className="bg-white shadow-xl shadow-black/20 elevation-10 rounded-4xl mx-8 p-5 gap-3">
+            <View className="bg-white shadow-xl shadow-black/20 elevation-10 rounded-3xl mx-8 p-6 gap-3">
                 <TouchableOpacity className="my-2 mx-8 bg-green-500 rounded-3xl py-4" activeOpacity={0.8} onPress={() => {}}>
                     <Text className="text-white text-center text-lg font-bold">Rozpocznij spacer</Text>
                 </TouchableOpacity>

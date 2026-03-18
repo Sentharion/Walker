@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 
 const SaveWalk = () => {
     return (
-        <View className="bg-blue-50 border border-blue-200 rounded-3xl my-2 mx-8 overflow-hidden">
+        <View className="bg-blue-50 border border-blue-200 rounded-3xl my-2 mx-8 overflow-hidden mb-5">
             <View className="flex-row py-5 px-5 gap-4">
                 <View className="items-center justify-center">
                     <Text className="text-3xl">💾</Text>
