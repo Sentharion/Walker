@@ -5,10 +5,19 @@ import WalkStartButton from '../components/WalkStartButton';
 import WeatherWidget from '../components/WeatherWidget';
 import WelcomeWidget from '../components/WelcomeWidget';
 import MyWalks from '../components/MyWalks';
+import { useGradientStore } from '@/store/gradientStore';
+import { useUserStore } from '@/store/userStore';
+import { useEffect } from 'react';
 
 
 const { height } = Dimensions.get('window');
 const HomeScreen = () => {
+    const loadGradient = useGradientStore((state) => state.loadGradient);
+    const loadAvatar = useUserStore((state) => state.loadAvatar);
+    useEffect(() => {
+        loadGradient();
+        loadAvatar();
+    }, []);
     return (
         <ScrollView>
             <View className="py-3.5 px-1 relative">

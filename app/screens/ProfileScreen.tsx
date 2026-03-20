@@ -1,11 +1,34 @@
-import { Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
+import { ScrollView, View } from "react-native";
+import ProfileInfo from "../components/profile/ProfileInfo";
+import { useGradientStore } from "@/store/gradientStore";
+import MyRecords from "../components/profile/MyRecords";
+import RecentActivity from "../components/profile/RecentActivity";
+import Logout from "../components/profile/Logout";
 
-const profileScreen = () => {
+const ProfileScreen = () => {
+    const gradient = useGradientStore((state) => state.gradient);
+    const draftGradient = useGradientStore((state) => state.draftGradient);
+    const [isEditing, setIsEditing] = useState(false);
     return (
-        <View>
-            <Text>profileScreen</Text>
-        </View>
+        <ScrollView className="bg-gray-50">
+            <View className="py-20 px-1 ">
+                <LinearGradient
+                    colors={isEditing ? draftGradient : gradient}
+                    className='absolute inset-0'
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                />
+            </View>
+            <View className="px-7 -mt-20 flex-col gap-5 mb-24">
+                <ProfileInfo isEditing={isEditing} setIsEditing={setIsEditing} />
+                <MyRecords />
+                <RecentActivity />
+                <Logout />
+            </View>
+        </ScrollView>
     );
 };
 
-export default profileScreen;
+export default ProfileScreen;

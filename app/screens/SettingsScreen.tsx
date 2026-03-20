@@ -1,10 +1,10 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 const SettingsScreen = () => {
     return (
-        <View>
+        <ScrollView className="bg-gray-50">
             <Text>SettingsScreen</Text>
-        </View>
+        </ScrollView>
     );
 };
 

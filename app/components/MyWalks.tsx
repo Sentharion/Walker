@@ -1,5 +1,4 @@
 import { ChevronRight } from "lucide-react-native";
-import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useSavedWalkStore } from "@/store/savedStore";
