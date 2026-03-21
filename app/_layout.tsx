@@ -5,6 +5,12 @@ import '../global.css';
 
 import { View, Text } from 'react-native';
 import { useSavedWalkStore } from '@/store/savedStore';
+import { cssInterop } from 'nativewind';
+import { LinearGradient } from 'expo-linear-gradient';
+
+cssInterop(LinearGradient, {
+  className: 'style',
+});
 
 export default function RootLayout() {
   const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
