@@ -4,6 +4,9 @@ import SettingsHeader from "../components/settings/SettingsHeader";
 import Units from "../components/settings/Units";
 import LocationAndNotifications from "../components/settings/LocationAndNotifications";
 import PrivacyPolicy from "../components/settings/PrivacyPolicy";
+import Help from "../components/settings/Help";
+import AppInfo from "../components/settings/AppInfo";
+import Deletions from "../components/settings/Deletions";
 
 const SettingsScreen = () => {
     return (
@@ -17,10 +20,13 @@ const SettingsScreen = () => {
                 />
                 <SettingsHeader />
             </View>
-            <View className="px-7 -mt-7 flex-col gap-5">
+            <View className="px-7 -mt-7 flex-col gap-5 mb-20">
                 <Units />
                 <LocationAndNotifications />
                 <PrivacyPolicy />
+                <Help />
+                <AppInfo />
+                <Deletions />
             </View>
         </ScrollView>
     );

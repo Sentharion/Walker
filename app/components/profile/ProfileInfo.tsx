@@ -94,12 +94,12 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
                 </View>
                 <Text className="text-gray-500 text-xs mb-2">Aby zmienić zdjęcie profilowe, kliknij ikonę aparatu</Text>
                 <View className="w-full">
-                    <Text className="text-md mb-2 font-semibold text-gray-700">Twoje imię i nazwisko</Text>
+                    <Text className="text-md mb-2 font-semibold text-gray-700">Nazwa użytkownika</Text>
                     <TextInput 
                         className="text-2xl font-bold text-gray-800 border bg-gray-50 border-gray-300 rounded-xl p-3 w-full text-center focus:border-green-700 focus:border-2" 
                         value={draftName}
                         onChangeText={setDraftName}
-                        placeholder="Imię i nazwisko" 
+                        placeholder="Nazwa użytkownika" 
                     />
                 </View>
                 <View className="w-full mt-2">
