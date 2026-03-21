@@ -121,6 +121,22 @@ export default function RootLayout() {
             },
           }}
         />
+        <Stack.Screen
+          name="faq"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-5">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>FAQ</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8, paddingTop: 5 }}>Najczęściej zadawane pytania</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#14b8a6",
+            },
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
 
