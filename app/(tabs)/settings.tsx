@@ -1,10 +1,10 @@
-import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SettingsScreen from "../screens/SettingsScreen";
 
 export default function Settings() {
     return (
         <SafeAreaView>
-            <Text>Settings</Text>
+            <SettingsScreen />
         </SafeAreaView>
     );
 }
