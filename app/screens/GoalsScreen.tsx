@@ -27,7 +27,7 @@ const GoalsScreen = () => {
             </View>
             {goals.length === 0 ? (
                 <View className="flex-1 items-center justify-center mt-10">
-                    <View className="bg-gray-200 border border-gray-300 w-8/12 border-dashed border-2 rounded-xl p-12 gap-3">
+                    <View className="bg-gray-200 border-gray-300 w-8/12 border-dashed border-2 rounded-xl p-12 gap-3">
                         <Text className="text-gray-500 text-center">Brak celów</Text>
                         <Text className="text-gray-500 text-center">Postaw sobie nowy cel i ruszaj w jego stronę!</Text>
                     </View>

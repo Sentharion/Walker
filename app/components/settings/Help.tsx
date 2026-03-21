@@ -1,11 +1,17 @@
 import { Text, View, TouchableOpacity,Modal } from "react-native";
 import { CircleQuestionMark, ChevronRight, X, Book, AtSign } from "lucide-react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 const Help = () => {
     const [isHelpModalVisible,setIsHelpModalVisible] = useState(false);
+    const router = useRouter();
     const handlePress = () => {
         setIsHelpModalVisible(true);
+    };
+
+    const handleFaqPress = () => {
+        router.push("/faq");
     };
     return (
         <>
@@ -34,7 +40,7 @@ const Help = () => {
                             </TouchableOpacity>
                         </View>
                         <View className="flex-col gap-4 mt-4">
-                            <TouchableOpacity className="flex-row items-center gap-2 bg-teal-50 rounded-xl p-4" activeOpacity={0.8}>
+                            <TouchableOpacity className="flex-row items-center gap-2 bg-teal-50 rounded-xl p-4" activeOpacity={0.8} onPress={handleFaqPress}>
                                 <View className="bg-teal-100 rounded-full p-2">
                                     <Book size={18} color="#0d9488" />
                                 </View>
