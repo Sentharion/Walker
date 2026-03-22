@@ -3,14 +3,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import walkIMG from "../../assets/images/walk.png";
 import { Navigation } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useWalkStore } from '@/store/walkStore';
 
 const { height} = Dimensions.get('window');
 
 const WalkStartButton = () => {
     const router = useRouter();
+    const resetWalk = useWalkStore((state) => state.resetWalk);
+    const handlePress = () => {
+        resetWalk();
+        router.push('/map');
+    }
     return (
         <View className='w-full absolute' style={{ top: height * 0.308, paddingHorizontal: 28 }}>
-            <TouchableOpacity onPress={() => router.push('/map')} className='w-full overflow-hidden rounded-3xl shadow-lg' style={{ height: height * 0.23 }} activeOpacity={0.8}>
+            <TouchableOpacity onPress={handlePress} className='w-full overflow-hidden rounded-3xl shadow-lg' style={{ height: height * 0.23 }} activeOpacity={0.8}>
                 <LinearGradient
                     colors={['#a7f3d0', '#5eead4']}
                     className='absolute inset-0'

@@ -15,13 +15,20 @@ type WalkState = {
   name: string;
   difficulty: "Łatwy" | "Średni" | "Trudny" | "";
   note:string;
+  templatePoints: Point[]; // New field for the guide route
 
   setPoints: (points: Point[]) => void;
+  setTemplatePoints: (points: Point[]) => void;
+
   addPoint: (point: Point) => void;
-  setDistance: (distance: number) => void;
+  setDistance: (updater: number | ((prev: number) => number)) => void;
   setName: (name: string) => void;
   setDifficulty: (difficulty: "Łatwy" | "Średni" | "Trudny" | "") => void;
   setNote: (note: string) => void;
+  setCalories: (updater: number | ((prev: number) => number)) => void;
+  setSteps: (updater: number | ((prev: number) => number)) => void;
+  setDuration: (updater: number | ((prev: number) => number)) => void;
+
 
   startWalk: () => void;
   stopWalk: () => void;
@@ -38,22 +45,35 @@ export const useWalkStore = create<WalkState>((set) => ({
   name: "",
   difficulty: "",
   note: "",
+  templatePoints: [],
+
 
   setPoints: (points) => set({ points }),
+  setTemplatePoints: (templatePoints) => set({ templatePoints }),
+
+  setCalories: (updater) => set((state) => ({ 
+    calories: typeof updater === "function" ? updater(state.calories) : updater 
+  })),
+  setSteps: (updater) => set((state) => ({ 
+    steps: typeof updater === "function" ? updater(state.steps) : updater 
+  })),
+  setDuration: (updater) => set((state) => ({ 
+    duration: typeof updater === "function" ? updater(state.duration) : updater 
+  })),
+
 
   addPoint: (point) =>
     set((state) => ({
       points: [...state.points, point],
     })),
 
-  setDistance: (distance) => set({ distance }),
+  setDistance: (updater) => set((state) => ({ 
+    distance: typeof updater === "function" ? updater(state.distance) : updater 
+  })),
 
   startWalk: () =>
     set({
       isWalking: true,
-      duration: 0,
-      steps: 0,
-      calories: 0,
     }),
 
   stopWalk: () =>
@@ -61,9 +81,11 @@ export const useWalkStore = create<WalkState>((set) => ({
       isWalking: false,
     }),
 
+
   resetWalk: () =>
     set({
       points: [],
+      templatePoints: [],
       distance: 0,
       duration: 0,
       steps: 0,
@@ -73,6 +95,7 @@ export const useWalkStore = create<WalkState>((set) => ({
       difficulty: "",
       note: "",
     }),
+
 
     setName: (name) => set({ name }),
     setDifficulty: (difficulty) => set({ difficulty }),

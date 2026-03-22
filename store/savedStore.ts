@@ -1,4 +1,4 @@
-import { getWalks } from "@/utils/walksStorage";
+import { getWalks, updateWalkStorage } from "@/utils/walksStorage";
 import { create } from "zustand";
 
 type Point = {
@@ -27,8 +27,10 @@ type walkStore = {
     selectedWalk: SavedWalk | null;
     setSelectedWalk: (walk: SavedWalk) => void;
     updateWalkNote: (id: string, note: string) => void;
+    finishWalk: (id: string, data: Partial<SavedWalk>) => Promise<void>;
     loadSavedWalks: () => Promise<void>;
 };
+
 
 export const useSavedWalkStore = create<walkStore>((set) => ({
     savedWalks: [],
@@ -43,7 +45,15 @@ export const useSavedWalkStore = create<walkStore>((set) => ({
         savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, note } : w),
         selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, note } : state.selectedWalk
     })),
+    finishWalk: async (id, data) => {
+        set((state) => ({
+            savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, ...data, finished: true } : w),
+            selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, ...data, finished: true } : state.selectedWalk
+        }));
+        await updateWalkStorage(id, { ...data, finished: true });
+    },
     loadSavedWalks: async () => {
+
         const walks = await getWalks();
        try{
         if (walks) {
