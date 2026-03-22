@@ -28,10 +28,11 @@ const RoutePreview = ({points}: RoutePreviewProps) => {
         <View className="bg-white shadow-xl shadow-black/40 elevation-10 rounded-3xl mx-8 overflow-hidden">
             <Text className="p-5 text-xl font-semibold">Podgląd trasy</Text>
             <MapView style={{width: "100%", height: 200, padding: 10}} ref={mapRef} scrollEnabled={true} zoomEnabled={true} pitchEnabled={false} rotateEnabled={false} onMapReady={() => setMapReady(true)}>
-                <Polyline coordinates={points} strokeColor="green" strokeWidth={2}/>
-                <Marker coordinate={points[0]} title="Początek" pinColor="green"></Marker>
-                <Marker coordinate={points[points.length - 1]} title="Koniec"></Marker>
+                <Polyline coordinates={points} strokeColor="#10b981" strokeWidth={5}/>
+                <Marker coordinate={points[0]} title="Początek" pinColor="#10b981"></Marker>
+                <Marker coordinate={points[points.length - 1]} title="Koniec" pinColor="#ef4444"></Marker>
             </MapView>
+
         </View>
     );
 };

@@ -31,6 +31,20 @@ export const removeWalk = async (id: string) => {
             await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(filtered));
         }
     } catch (error) {
-        console.log("Błąd usuwania spaceru", error);
     }
 };
+
+
+export const updateWalkStorage = async (id: string, updatedWalk: any) => {
+    try {
+        const existing = await AsyncStorage.getItem(WALKS_STORAGE_KEY);
+        if (existing) {
+            const walks = JSON.parse(existing);
+            const updated = walks.map((w: any) => w.id === id ? { ...w, ...updatedWalk } : w);
+            await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(updated));
+        }
+    } catch (error) {
+        console.log("Błąd aktualizacji spaceru", error);
+    }
+};
+

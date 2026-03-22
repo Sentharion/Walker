@@ -1,5 +1,5 @@
-import { Text, ScrollView, View, TouchableOpacity, TextInput } from "react-native";
-import { ChevronDown, HelpCircle, Search, MessageCircle, Mail } from "lucide-react-native";
+import { Text, ScrollView, View, TouchableOpacity} from "react-native";
+import { ChevronDown, MessageCircle, Mail } from "lucide-react-native";
 import { useState } from "react";
 
 interface FAQItem {
@@ -83,7 +83,7 @@ const FaqScreen = () => {
                                 {isExpanded && (
                                     <View className="px-6 pb-8 bg-white">
                                         <View className="h-[1px] bg-gray-50 mb-6" />
-                                        <Text className="text-gray-600 text-[16px] leading-7 font-medium">
+                                        <Text className="text-gray-600 text-[14px] leading-7 font-medium">
                                             {faq.answer}
                                         </Text>
                                     </View>
@@ -94,15 +94,15 @@ const FaqScreen = () => {
                 </View>
 
                 {/* Contact Section */}
-                <View className="mt-16 bg-white rounded-[40px] p-8 border border-gray-100 shadow-2xl shadow-emerald-900/5 items-center">
-                    <View className="bg-emerald-50 w-16 h-16 rounded-full items-center justify-center mb-4">
-                        <MessageCircle size={32} color="#059669" />
+                <View className="mt-16 bg-white rounded-[40px] p-8 border border-gray-100 shadow-2xl shadow-teal-900/5 items-center">
+                    <View className="bg-teal-50 w-16 h-16 rounded-full items-center justify-center mb-4">
+                        <MessageCircle size={32} color="#047857" />
                     </View>
                     <Text className="text-2xl font-bold text-gray-900 text-center mb-2">Nadal masz pytania?</Text>
-                    <Text className="text-gray-500 text-center mb-8 px-4">Jeśli nie znalazłeś odpowiedzi, skontaktuj się z nami!</Text>
+                    <Text className="text-gray-500 text-center mb-8 px-4">Jeśli nie znalazłeś odpowiedzi, napisz do nas!</Text>
                     
                     <View className="w-full">
-                        <View className="bg-emerald-600 py-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-emerald-600/20">
+                        <View className="bg-teal-500 py-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-teal-600/20">
                             <Mail size={20} color="white" style={{ marginRight: 8 }} />
                             <Text className="text-white font-bold text-lg">[EMAIL_ADDRESS]</Text>
                         </View>

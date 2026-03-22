@@ -7,8 +7,13 @@ import { View, Text } from 'react-native';
 import { useSavedWalkStore } from '@/store/savedStore';
 import { cssInterop } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
+import MapView from 'react-native-maps';
 
 cssInterop(LinearGradient, {
+  className: 'style',
+});
+
+cssInterop(MapView, {
   className: 'style',
 });
 
@@ -128,6 +133,22 @@ export default function RootLayout() {
               <View className="items-center py-5">
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>FAQ</Text>
                 <Text style={{ color: "white", fontSize: 14, opacity: 0.8, paddingTop: 5 }}>Najczęściej zadawane pytania</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#14b8a6",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="livewalk"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-5">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Aktywny spacer</Text>
+                <Text style={{ color: "white", fontSize: 14, opacity: 0.8, paddingTop: 5 }}>Śledź swój spacer w czasie rzeczywistym</Text>
               </View>
             ),
             headerTitleAlign: "center",

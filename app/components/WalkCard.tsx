@@ -1,4 +1,6 @@
 import { SavedWalk, useSavedWalkStore } from "@/store/savedStore";
+import { useWalkStore } from "@/store/walkStore";
+
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ChevronRight, Clock, Footprints, MapPin, Play } from "lucide-react-native";
@@ -15,13 +17,26 @@ const WalkCard = ({walk}: WalkCardProps) => {
         setSelectedWalk(walk);
         router.push('/savedWalk');
     }
+    const setPoints = useWalkStore((state) => state.setPoints);
+    const setTemplatePoints = useWalkStore((state) => state.setTemplatePoints);
+
+    const setDistance = useWalkStore((state) => state.setDistance);
+    const setDuration = useWalkStore((state) => state.setDuration);
+    const setSteps = useWalkStore((state) => state.setSteps);
+    const setCalories = useWalkStore((state) => state.setCalories);
+    const setName = useWalkStore((state) => state.setName);
+    const setDifficulty = useWalkStore((state) => state.setDifficulty);
+    const setNote = useWalkStore((state) => state.setNote);
+    const startWalk = useWalkStore((state) => state.startWalk);
+    const resetWalk = useWalkStore((state) => state.resetWalk);
 
     const formatKm = (distance: number) => {
         if (distance >= 1000) {
             return `${(distance / 1000).toFixed(1)} km`;
         }
-        return `${distance} m`;
+        return `${Math.round(distance)} m`;
     }
+
 
     const formatDate = (date: string) => {
         const d = new Date(date);
@@ -42,6 +57,31 @@ const WalkCard = ({walk}: WalkCardProps) => {
             return `${seconds}s`;
         }
     }
+
+    const handleStart = () => {
+        setSelectedWalk(walk);
+        resetWalk();
+        startWalk();
+        
+        setName(walk.name);
+        setDifficulty(walk.difficulty);
+        setNote(walk.note);
+
+        if (walk.duration > 0) {
+            setPoints(walk.points);
+            setDistance(walk.distance);
+            setDuration(() => walk.duration);
+            setSteps(walk.steps);
+            setCalories(walk.calories);
+        } else {
+            setTemplatePoints(walk.points);
+            setDistance(walk.distance);
+        }
+
+        
+        router.push('/livewalk');
+    }
+
 
     return (
         <View className="w-full py-2">
@@ -80,15 +120,17 @@ const WalkCard = ({walk}: WalkCardProps) => {
                        </View>
                       <View className="flex-row items-center gap-2 w-full">
                         {walk.finished ? (
-                            <View className="flex-1 flex-row items-center gap-2 bg-white/20 rounded-2xl px-2 py-1 h-12 justify-center">
+                            <TouchableOpacity className="flex-1 flex-row items-center gap-2 bg-white/20 rounded-2xl px-2 py-1 h-12 justify-center" activeOpacity={0.8} onPress={handleDetails}>
                                 <Text className="text-md text-white font-semibold"> ✓ Ukończono </Text>
-                            </View>
-                        ) : (
-                            <TouchableOpacity className="flex-1 flex-row items-center gap-2 bg-white/20 rounded-2xl px-2 py-1 h-12 justify-center" activeOpacity={0.8}>
-                                <Play color="white" fill="white" size={16} />
-                                <Text className="text-md text-white font-semibold"> Rozpocznij</Text>
                             </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity className="flex-1 flex-row items-center gap-2 bg-white/20 rounded-2xl px-2 py-1 h-12 justify-center" activeOpacity={0.8} onPress={handleStart}>
+                                <Play color="white" fill="white" size={16} />
+                                <Text className="text-md text-white font-semibold"> {walk.duration > 0 ? "Wznów" : "Rozpocznij"}</Text>
+                            </TouchableOpacity>
+
                         )}
+
                         <TouchableOpacity className="flex-1 flex-row  items-center gap-2 bg-white/20 rounded-2xl px-1 py-1 h-12 w-12 justify-center" activeOpacity={0.8} onPress={handleDetails} >
                             <Text className="text-md text-white font-semibold">Szczegóły</Text>
                             <ChevronRight color="white" size={16} />
