@@ -1,10 +1,10 @@
 import { useGradientStore } from "@/store/gradientStore";
 import { useUserStore } from "@/store/userStore";
-import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from "expo-linear-gradient";
 import { Camera, Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { pickImage, updateAvatar } from "../../../lib/avatar";
 
 interface ProfileProps{
     isEditing:boolean;
@@ -42,12 +42,21 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
         { id: 15, colors: ["#0c0c0c", "#0f971c"] },
     ];
 
-    const handleSave = () => {
-        setIsEditing(false);
-        setAvatar(avatar as string);
-        setName(draftName);
-        setMotto(draftMotto);
-        saveDraftGradient();
+    const handleSave = async () => {
+        try {
+            // Update the profile database record if the avatar changed
+            if (draftAvatar && draftAvatar !== avatar) {
+                await updateAvatar(draftAvatar);
+                setAvatar(draftAvatar);
+            }
+            
+            setIsEditing(false);
+            setName(draftName);
+            setMotto(draftMotto);
+            saveDraftGradient();
+        } catch (error: any) {
+            alert("Błąd podczas zapisywania profilu: " + error.message);
+        }
     };
 
     const handleCancel = () => {
@@ -59,25 +68,19 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
     };
 
     const handleCamera = async () => {
-        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permission.status !== 'granted') {
-            alert('Potrzebujemy dostępu do galerii, aby móc zmienić zdjęcie profilowe!');
-            return;
-        }
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
-        if (!result.canceled) {
-            setDraftAvatar(result.assets[0].uri);
+        try {
+            const publicUrl = await pickImage();
+            if (publicUrl) {
+                setDraftAvatar(publicUrl);
+            }
+        } catch (error: any) {
+            alert("Błąd podczas wgrywania zdjęcia: " + error.message);
         }
     }
 
     useEffect(() => {
         setDraftAvatar(avatar);
-    }, []);
+    }, [avatar]);
 
     return isEditing ? (
         <View className="bg-white shadow-md rounded-xl p-5 gap-3">

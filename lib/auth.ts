@@ -13,14 +13,20 @@ export async function signUp(
     if (error) throw error;
 
     const userId = data.user?.id;
-
     if (!userId) throw new Error("Nie udało się utworzyć użytkownika");
 
-    await supabase.from("profiles").insert({
-        id: userId,
-        username,
-        avatar_url: "",
-    });
+    const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+            id: userId,
+            username,
+            avatar_url: "",
+        });
+
+    if (profileError) {
+        console.error("Profile creation error:", profileError);
+        throw new Error("Konto utworzone, ale nie udało się stworzyć profilu: " + profileError.message);
+    }
 
     return data;
 }

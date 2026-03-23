@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import '../global.css';
@@ -8,6 +8,8 @@ import { useSavedWalkStore } from '@/store/savedStore';
 import { cssInterop } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
 import MapView from 'react-native-maps';
+import { useSession } from '../hooks/auto-login';
+import { useEffect } from 'react';
 
 cssInterop(LinearGradient, {
   className: 'style',
@@ -20,6 +22,24 @@ cssInterop(MapView, {
 export default function RootLayout() {
   const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
   const difficulty = useSavedWalkStore((state: any) => state.selectedWalk?.difficulty);
+  
+  const { session, loading } = useSession();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+
+    const inAuthGroup = segments[0] === 'screens' && segments[1] === 'LoginScreen';
+
+    if (!session && !inAuthGroup) {
+      // Redirect to the login page if they are not logged in
+      router.replace('/screens/LoginScreen');
+    } else if (session && inAuthGroup) {
+      // Redirect to the home page if they are logged in
+      router.replace('/(tabs)');
+    }
+  }, [session, loading, segments, router]);
 
   return (
     <>
