@@ -1,109 +1,84 @@
-import { Text, View, Platform, TouchableOpacity, Alert } from "react-native";
+import { Text, View, TouchableOpacity, Alert, Linking } from "react-native";
 import { Bell, MapPin, ExternalLink, Settings as SettingsIcon } from "lucide-react-native";
 import { useState, useEffect, useCallback } from "react";
 import { Switch } from "react-native-switch";
-import { check, request, PERMISSIONS, RESULTS, openSettings, checkNotifications, requestNotifications, PermissionStatus } from "react-native-permissions";
+import * as Notifications from 'expo-notifications';
+import * as Location from 'expo-location';
 
 const LocationAndNotifications = () => {
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const [isLocationEnabled, setIsLocationEnabled] = useState(false);
-    const [locationStatus, setLocationStatus] = useState<string>("");
-    const [notificationStatus, setNotificationStatus] = useState<PermissionStatus | string>("");
-
-    const locationPermission = Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    const [locationBlocked, setLocationBlocked] = useState(false);
+    const [notificationBlocked, setNotificationBlocked] = useState(false);
 
     const checkPermissions = useCallback(async () => {
-        const locStatus = await check(locationPermission);
-        let notifStatus: PermissionStatus | string;
+        const { status: locStatus, canAskAgain: locCanAsk } = await Location.getForegroundPermissionsAsync();
+        const { status: notifStatus, canAskAgain: notifCanAsk } = await Notifications.getPermissionsAsync();
 
-        if (Platform.OS === 'ios') {
-            const { status } = await checkNotifications();
-            notifStatus = status;
-        } else if (Platform.OS === 'android') {
-            // Android 13+ requires POST_NOTIFICATIONS. Using string literal to avoid TS error in some versions.
-            const POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS" as any;
-            notifStatus = await check(POST_NOTIFICATIONS);
-        } else {
-            notifStatus = RESULTS.GRANTED;
-        }
+        setIsLocationEnabled(locStatus === Location.PermissionStatus.GRANTED);
+        setIsNotificationEnabled(notifStatus === Notifications.PermissionStatus.GRANTED);
 
-        setLocationStatus(locStatus);
-        setNotificationStatus(notifStatus);
-
-        setIsLocationEnabled(locStatus === RESULTS.GRANTED);
-        setIsNotificationEnabled(notifStatus === RESULTS.GRANTED);
-    }, [locationPermission]);
+        setLocationBlocked(locStatus === Location.PermissionStatus.DENIED && !locCanAsk);
+        setNotificationBlocked(notifStatus === Notifications.PermissionStatus.DENIED && !notifCanAsk);
+    }, []);
 
     useEffect(() => {
         checkPermissions();
     }, [checkPermissions]);
 
     const handleToggleLocation = async () => {
-        if (locationStatus === RESULTS.BLOCKED) {
+        if (locationBlocked) {
             Alert.alert(
                 "Uprawnienia lokalizacji",
                 "Dostęp do lokalizacji jest zablokowany. Otwórz ustawienia systemowe, aby go włączyć.",
                 [
                     { text: "Anuluj", style: "cancel" },
-                    { text: "Ustawienia", onPress: () => openSettings() }
+                    { text: "Ustawienia", onPress: () => Linking.openSettings() }
                 ]
             );
             return;
         }
 
         if (isLocationEnabled) {
-            setIsLocationEnabled(false);
+            Alert.alert("Lokalizacja", "Aby całkowicie wyłączyć dostęp do lokalizacji, przejdź do ustawień telefonu.", [
+                { text: "Anuluj", style: "cancel" },
+                { text: "Ustawienia", onPress: () => Linking.openSettings() }
+            ]);
         } else {
-            const result = await request(locationPermission);
-            setLocationStatus(result);
-            setIsLocationEnabled(result === RESULTS.GRANTED);
+            const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+            setIsLocationEnabled(status === Location.PermissionStatus.GRANTED);
+            setLocationBlocked(status === Location.PermissionStatus.DENIED && !canAskAgain);
         }
     };
 
     const handleToggleNotifications = async () => {
-        if (notificationStatus === RESULTS.BLOCKED) {
+        if (notificationBlocked) {
             Alert.alert(
                 "Uprawnienia powiadomień",
                 "Powiadomienia są zablokowane. Otwórz ustawienia systemowe, aby je włączyć.",
                 [
                     { text: "Anuluj", style: "cancel" },
-                    { text: "Ustawienia", onPress: () => openSettings() }
+                    { text: "Ustawienia", onPress: () => Linking.openSettings() }
                 ]
             );
             return;
         }
 
         if (isNotificationEnabled) {
-            setIsNotificationEnabled(false);
+            Alert.alert("Powiadomienia", "Aby całkowicie wyłączyć powiadomienia, przejdź do ustawień telefonu.", [
+                { text: "Anuluj", style: "cancel" },
+                { text: "Ustawienia", onPress: () => Linking.openSettings() }
+            ]);
         } else {
-            let result: PermissionStatus | string;
-            if (Platform.OS === 'ios') {
-                const { status } = await requestNotifications(['alert', 'badge', 'sound']);
-                result = status;
-            } else if (Platform.OS === 'android') {
-                const POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS" as any;
-                result = await request(POST_NOTIFICATIONS);
-            } else {
-                result = RESULTS.GRANTED;
-            }
-            
-            setNotificationStatus(result);
-            setIsNotificationEnabled(result === RESULTS.GRANTED);
+            const { status, canAskAgain } = await Notifications.requestPermissionsAsync();
+            setIsNotificationEnabled(status === Notifications.PermissionStatus.GRANTED);
+            setNotificationBlocked(status === Notifications.PermissionStatus.DENIED && !canAskAgain);
         }
     };
 
     return (
         <View className="bg-white rounded-3xl shadow-2xl shadow-black/20 elevation-8 mb-3 z-10 p-6 flex-col gap-5 border border-gray-100">
             {/* Header / Description */}
-            <View className="flex-row items-center gap-3 mb-1">
-                <View className="bg-blue-50 p-2.5 rounded-2xl">
-                    <SettingsIcon size={20} color="#3b82f6" />
-                </View>
-                <View>
-                    <Text className="text-lg font-bold text-gray-900 leading-tight">System i Dane</Text>
-                    <Text className="text-[12px] text-gray-500 font-medium">Zarządzaj dostępem aplikacji</Text>
-                </View>
-            </View>
 
             {/* Notifications Section */}
             <View className="flex-col pb-5 border-b border-gray-100">
@@ -132,9 +107,9 @@ const LocationAndNotifications = () => {
                         innerCircleStyle={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1 }}
                     />
                 </View>
-                {notificationStatus === RESULTS.BLOCKED && (
+                {notificationBlocked && (
                     <TouchableOpacity 
-                        onPress={() => openSettings()}
+                        onPress={() => Linking.openSettings()}
                         className="flex-row items-center gap-1.5 mt-2.5 ml-14"
                     >
                         <Text className="text-[12px] text-red-500 font-semibold tracking-tight">Wymagane uprawnienia. Zmień w ustawieniach</Text>
@@ -170,9 +145,9 @@ const LocationAndNotifications = () => {
                         innerCircleStyle={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1 }}
                     />
                 </View>
-                {locationStatus === RESULTS.BLOCKED && (
+                {locationBlocked && (
                     <TouchableOpacity 
-                        onPress={() => openSettings()}
+                        onPress={() => Linking.openSettings()}
                         className="flex-row items-center gap-1.5 mt-2.5 ml-14"
                     >
                         <Text className="text-[12px] text-red-500 font-semibold tracking-tight">Lokalizacja zablokowana. Kliknij by zmienić</Text>
