@@ -4,6 +4,7 @@ import { saveWalk } from "@/utils/walksStorage";
 import { useWalkStore, type Point } from "@/store/walkStore";
 import { useSavedWalkStore, type SavedWalk } from "@/store/savedStore";
 import { saveWalkOnline } from "../../../lib/walks";
+import { scheduleDailyReminder } from "@/utils/notifications";
 import * as Crypto from 'expo-crypto';
 
 interface SaveWalkProps {
@@ -56,6 +57,7 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
                 createdAt: newWalk.createdAt,
             }, points, walkId);
 
+            await scheduleDailyReminder();
             resetWalk();
             router.replace("/");
         } catch (error: any) {

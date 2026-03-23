@@ -8,6 +8,7 @@ import MyWalks from '../components/MyWalks';
 import { useGradientStore } from '@/store/gradientStore';
 import { useUserStore } from '@/store/userStore';
 import { useEffect } from 'react';
+import { scheduleDailyReminder } from '@/utils/notifications';
 
 
 const { height } = Dimensions.get('window');
@@ -17,6 +18,7 @@ const HomeScreen = () => {
     useEffect(() => {
         loadGradient();
         loadProfile();
+        scheduleDailyReminder();
     }, []);
     return (
         <ScrollView>

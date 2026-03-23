@@ -48,3 +48,13 @@ export const updateWalkStorage = async (id: string, updatedWalk: any) => {
     }
 };
 
+
+export const hasWalkedToday = async (): Promise<boolean> => {
+    try {
+        const walks = await getWalks();
+        const today = new Date().toISOString().split('T')[0];
+        return walks.some((walk: any) => walk.createdAt && walk.createdAt.startsWith(today));
+    } catch (error) {
+        return false;
+    }
+};
