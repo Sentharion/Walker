@@ -13,10 +13,10 @@ import { useEffect } from 'react';
 const { height } = Dimensions.get('window');
 const HomeScreen = () => {
     const loadGradient = useGradientStore((state) => state.loadGradient);
-    const loadAvatar = useUserStore((state) => state.loadAvatar);
+    const loadProfile = useUserStore((state) => state.loadProfile);
     useEffect(() => {
         loadGradient();
-        loadAvatar();
+        loadProfile();
     }, []);
     return (
         <ScrollView>

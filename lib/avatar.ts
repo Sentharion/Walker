@@ -19,31 +19,105 @@ export const pickImage = async () => {
     }
 
     const image = result.assets[0];
-    const response = await fetch(image.uri);
-    const blob = await response.blob();
     
-    // 3. Using user.id instead of undefined userId
-    const filePath = `${user.id}.jpg`;
+    // Create FormData for the upload
+    const formData = new FormData();
+    const fileName = `${user.id}.jpg`;
+    
+    // Explicitly delete previous avatar from storage before uploading new one
+    try {
+        await supabase.storage.from('Avatars').remove([fileName]);
+    } catch (e) {
+        // Ignore errors if file doesn't exist
+    }
 
-    // 4. Fixed Syntax Error
+    // cast to any to avoid TypeScript errors with FormData 'uri' prop in React Native
+    formData.append('file', {
+        uri: image.uri,
+        name: fileName,
+        type: 'image/jpeg',
+    } as any);
+
+    // 4. Upload using standard Supabase storage method (FormData works best in RN)
     const { error } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, blob, { upsert: true });
+        .from('Avatars')
+        .upload(fileName, formData, { 
+            upsert: true,
+            contentType: 'image/jpeg' 
+        });
 
-    if (error) throw error;
+    if (error) {
+        console.error("Storage upload error:", error);
+        throw error;
+    }
 
-    const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-    return `${data.publicUrl}?t=${new Date().getTime()}`;
+    const { data: urlData, error: signedError } = await supabase.storage
+        .from('Avatars')
+        .createSignedUrl(fileName, 31536000); // 1 year expiry
+
+    if (signedError) throw signedError;
+    return urlData.signedUrl;
 }
 
-export const updateAvatar = async (avatarUrl: string) => {
+export const loadProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    let { data, error } = await supabase
+        .from('profiles')
+        .select('username, motto, avatar_url')
+        .eq('id', user.id)
+        .single();
+
+    // If profile doesn't exist (PGRST116), create it!
+    if (error && error.code === 'PGRST116') {
+        const { data: newData, error: createError } = await supabase
+            .from('profiles')
+            .upsert({
+                id: user.id,
+                username: user.email?.split('@')[0] || "Użytkownik",
+                avatar_url: ""
+            })
+            .select()
+            .single();
+        
+        if (createError) {
+            console.error("Critical: Could not auto-create profile", createError);
+            return null;
+        }
+        data = newData;
+    } else if (error) {
+        console.error("Load profile error:", error);
+        return null;
+    }
+    
+    // If the bucket is PRIVATE, we must generate a signed URL to show it
+    if (data.avatar_url && !data.avatar_url.includes('token=')) {
+        try {
+            // Get the filename (e.g., user_id.jpg) from the URL or profile
+            const fileName = `${user.id}.jpg`;
+            const { data: signedData } = await supabase.storage
+                .from('Avatars')
+                .createSignedUrl(fileName, 31536000); // 1 year
+            
+            if (signedData) {
+                data.avatar_url = signedData.signedUrl;
+            }
+        } catch (e) {
+            console.error("Error creating signed URL:", e);
+        }
+    }
+    
+    return data;
+}
+
+export const updateProfile = async (updates: { username?: string, motto?: string, avatar_url?: string }) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("No user logged in");
 
-    // 5. Using user.id to update profile
     const { error } = await supabase
         .from('profiles')
-        .update({ avatar_url: avatarUrl })
+        .update(updates)
         .eq('id', user.id);
         
     if (error) throw error;

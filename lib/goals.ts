@@ -75,3 +75,18 @@ export async function loadGoalsOnline() {
         createdAt: goal.created_at,
     }))
 }
+
+export async function clearAllGoalsOnline() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return;
+
+    const { error } = await supabase
+        .from('goals')
+        .delete()
+        .eq('user_id', user.id);
+
+    if (error) {
+        console.error("Error clearing all goals online:", error);
+        throw error;
+    }
+}

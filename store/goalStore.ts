@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import { getGoals, saveGoals } from "@/utils/goalsStorage";
 import { saveGoalOnline, deleteGoalOnline, loadGoalsOnline } from "../lib/goals";
+import * as Crypto from 'expo-crypto';
 
 const GOALS_STORAGE_KEY = "GOALS_STORAGE";
 
@@ -79,7 +80,7 @@ export const useGoalStore = create<GoalStore>((set,get) => ({
         if(!draft.type || !draft.value || !draft.deadline || !draft.name) return;
 
         const newGoal: Goal = {
-            id: Date.now().toString(),
+            id: Crypto.randomUUID(),
             type: draft.type,
             value: draft.value,
             unit: draft.unit,

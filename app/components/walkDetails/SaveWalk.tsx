@@ -4,6 +4,7 @@ import { saveWalk } from "@/utils/walksStorage";
 import { useWalkStore, type Point } from "@/store/walkStore";
 import { useSavedWalkStore, type SavedWalk } from "@/store/savedStore";
 import { saveWalkOnline } from "../../../lib/walks";
+import * as Crypto from 'expo-crypto';
 
 interface SaveWalkProps {
     distance: number;
@@ -22,8 +23,9 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
     const resetWalk = useWalkStore((state) => state.resetWalk);
 
     const handleSaveWalk = async () => {
+        const walkId = Crypto.randomUUID();
         const newWalk: SavedWalk = {
-            id: Date.now().toString(),
+            id: walkId,
             name: name || "Nowy spacer",
             difficulty: (difficulty as any) || "Średni",
             distance,
@@ -52,7 +54,7 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
                 note: newWalk.note,
                 finished: newWalk.finished,
                 createdAt: newWalk.createdAt,
-            }, points);
+            }, points, walkId);
 
             resetWalk();
             router.replace("/");

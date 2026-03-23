@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Camera, Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { pickImage, updateAvatar } from "../../../lib/avatar";
+import { pickImage, updateProfile } from "../../../lib/avatar";
 
 interface ProfileProps{
     isEditing:boolean;
@@ -12,18 +12,19 @@ interface ProfileProps{
 }
 
 const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
-    const [name, setName] = useState("Jan Kowalski");
-    const [motto, setMotto] = useState("");
+    const storeAvatar = useUserStore((state) => state.avatar);
+    const storeUsername = useUserStore((state) => state.username);
+    const storeMotto = useUserStore((state) => state.motto);
+    const setProfile = useUserStore((state) => state.setProfile);
+    const loadProfileStore = useUserStore((state) => state.loadProfile);
 
-    const [draftAvatar, setDraftAvatar] = useState<string | null>(null);
-    const [draftName, setDraftName] = useState(name);
-    const [draftMotto, setDraftMotto] = useState(motto);
+    const [draftAvatar, setDraftAvatar] = useState<string | null>(storeAvatar);
+    const [draftName, setDraftName] = useState(storeUsername);
+    const [draftMotto, setDraftMotto] = useState(storeMotto);
 
     const setDraftGradient = useGradientStore((state) => state.setDraftGradient);
     const saveDraftGradient = useGradientStore((state) => state.saveDraftGradient);
     const resetDraftGradient = useGradientStore((state) => state.resetDraftGradient);
-    const setAvatar = useUserStore((state) => state.setAvatar);
-    const avatar = useUserStore((state) => state.avatar);
 
     const gradients: { id: number; colors: [string, string] }[] = [
         { id: 1, colors: ["#a855f7", "#db2777"] },
@@ -44,15 +45,13 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
 
     const handleSave = async () => {
         try {
-            // Update the profile database record if the avatar changed
-            if (draftAvatar && draftAvatar !== avatar) {
-                await updateAvatar(draftAvatar);
-                setAvatar(draftAvatar);
-            }
+            await setProfile({
+                username: draftName,
+                motto: draftMotto,
+                avatar_url: draftAvatar || undefined
+            });
             
             setIsEditing(false);
-            setName(draftName);
-            setMotto(draftMotto);
             saveDraftGradient();
         } catch (error: any) {
             alert("Błąd podczas zapisywania profilu: " + error.message);
@@ -61,9 +60,9 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
 
     const handleCancel = () => {
         setIsEditing(false);
-        setDraftAvatar(avatar);
-        setDraftName(name);
-        setDraftMotto(motto);
+        setDraftAvatar(storeAvatar);
+        setDraftName(storeUsername);
+        setDraftMotto(storeMotto);
         resetDraftGradient();
     };
 
@@ -79,8 +78,14 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
     }
 
     useEffect(() => {
-        setDraftAvatar(avatar);
-    }, [avatar]);
+        loadProfileStore();
+    }, [loadProfileStore]);
+
+    useEffect(() => {
+        setDraftAvatar(storeAvatar);
+        setDraftName(storeUsername);
+        setDraftMotto(storeMotto);
+    }, [storeAvatar, storeUsername, storeMotto]);
 
     return isEditing ? (
         <View className="bg-white shadow-md rounded-xl p-5 gap-3">
@@ -155,18 +160,18 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
         <View className="bg-white shadow-md rounded-xl p-5 gap-2">
             <View className="flex-col items-center gap-2">
                 <View className="w-20 h-20 rounded-full bg-gray-200 flex-row items-center justify-center">
-                    {avatar ? (
-                        <Image source={{ uri: avatar }} className="w-full h-full rounded-full" />
+                    {storeAvatar ? (
+                        <Image source={{ uri: storeAvatar }} className="w-full h-full rounded-full" />
                     ) : (
                         <Text className="text-4xl">👤</Text>
                     )}
                 </View>
                 <View className="flex-col items-center">
-                    <Text className="text-2xl font-bold text-black">{name}</Text>
+                    <Text className="text-2xl font-bold text-black">{storeUsername}</Text>
                 </View>
                 <View className="flex-row items-center gap-2 p-5 mt-2 bg-green-50 rounded-xl border border-green-100">
                     <Text className="text-green-700 text-sm italic">
-                        {motto.length > 0 ? `"${motto}"` : "Dodaj swoje motto"}
+                        {storeMotto.length > 0 ? `"${storeMotto}"` : "Dodaj swoje motto"}
                     </Text>
                 </View>
             </View>
