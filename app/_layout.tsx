@@ -26,6 +26,22 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
+          name="screens/LoginScreen"
+          options={{
+            headerTitle: () => (
+              <View className="items-center py-3">
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 24 }}>Zaloguj się</Text>
+              </View>
+            ),
+            headerTitleAlign: "center",
+            headerTintColor: "white",
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: "#10b981",
+            },
+          }}
+        />
+        <Stack.Screen
           name="walks"
           options={{
             headerTitle: () => (

@@ -12,6 +12,11 @@
     "ios": {
       "supportsTablet": true
     },
+    "splash": {
+      "image": "./assets/images/WalkerSplash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
     "android": {
       "package": "com.michp.walker",
       "versionCode": 1,
@@ -47,6 +52,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "68545cc9-4c63-4871-b2d9-985af722c632"
+      }
     }
   }
 }
