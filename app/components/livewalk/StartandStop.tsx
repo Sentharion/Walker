@@ -27,6 +27,8 @@ const StartandStop = () => {
     const templatePoints = useWalkStore((state) => state.templatePoints);
 
     const handleFinish = async () => {
+        console.log("selectedWalk:", selectedWalk);
+        console.log("savedWalks:", useSavedWalkStore.getState().savedWalks);
         if (selectedWalk) {
             // Preserve route points if no GPS points recorded
             const savedPoints = points.length > 0 

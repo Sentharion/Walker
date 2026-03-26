@@ -34,13 +34,16 @@ export const scheduleDailyReminder = async (isNotificationEnabled: boolean = tru
   // Cancel previous reminders to avoid duplicates
   await Notifications.cancelAllScheduledNotificationsAsync();
 
-  await Notifications.scheduleNotificationAsync({
+ await Notifications.scheduleNotificationAsync({
     content: {
-        title: "Pora na spacer! 🐾",
-        body: "Twoje dzienne cele czekają. Czy wyjdziesz dzisiaj na spacer?",
-        sound: true,
+      title: "Pora na spacer! 🐾",
+      body: "Twoje dzienne cele czekają. Czy wyjdziesz dzisiaj na spacer?",
+      sound: true,
     },
-    trigger: { date: reminderTime } as any,
+    trigger: {
+      type: 'time',       // 🔑 Wymagane!
+      timestamp: reminderTime.getTime(), // milisekundy od epoki
+    } as any,
   });
 
   console.log(`Reminder scheduled for: ${reminderTime.toLocaleString()}`);
