@@ -14,32 +14,33 @@ interface MonthCardProps {
     showYear?: boolean;
 }
 
-const tab = {
-    time: {
-        icon: Clock,
-        color: "blue",
-        label: "Czas",
-        value: "10",
-        unit: "Minut"
-    },
-    calories: {
-        icon: Flame,
-        color: "red",
-        label: "Spalone kalorie",
-        value: "10",
-        unit: "Kalorie"
-    },
-    steps: {
-        icon: Footprints,
-        color: "orange",
-        label: "Kroki",
-        value: "10.000",
-        unit: "Kroków"
-    }
-}
 
 const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: MonthCardProps) => {
     const router = useRouter();
+
+    const tab = {
+        time: {
+            icon: Clock,
+            color: "blue",
+            label: "Czas",
+            value: time > 60 ? (time / 60).toFixed(1) : time,
+            unit: time > 60 ? "Godzin" : "Minut"
+        },
+        calories: {
+            icon: Flame,
+            color: "red",
+            label: "Spalone kalorie",
+            value: calories.toFixed(1),
+            unit: "Kalorie"
+        },
+        steps: {
+            icon: Footprints,
+            color: "orange",
+            label: "Kroki",
+            value: steps.toLocaleString("pl-PL"),
+            unit: "Kroków"
+        }
+    }
     return (
         <View className="px-2 gap-2 flex-1 rounded-2xl overflow-hidden">
             <LinearGradient
@@ -80,7 +81,7 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
                             <Text className="text-gray-600 font-semibold text-sm">Dystans</Text>
                         </View>
                         <View className="flex-col gap-1">
-                            <Text className="text-black font-semibold text-3xl">10</Text>
+                            <Text className="text-black font-semibold text-3xl">{distance.toFixed(1)}</Text>
                             <Text className="text-gray-500 text-xs">Kilometrów</Text>
                         </View>
                     </View>
@@ -93,7 +94,7 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
                             </View>
                             <View className="flex-col gap-1 items-start justify-start">
                                 <Text className="text-black font-semibold text-xl">{value.value}</Text>
-                                <Text className="text-gray-500 text-xs">{value.label}</Text>
+                                <Text className="text-gray-500 text-md">{value.unit}</Text>
                             </View>
                         </View>
                     ))}

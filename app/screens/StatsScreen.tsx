@@ -5,8 +5,28 @@ import ThisWeekStats from "../components/stats/ThisWeekStats";
 import AllTime from "../components/stats/AllTime";
 import MonthCard from "../components/stats/MonthCard";
 import DailyActivity from "../components/stats/DailyAcitivity";
+import { useSavedWalkStore } from "@/store/savedStore";
+import { getMonthStats } from "@/utils/stats";
 
 const StatsScreen = () => {
+    const walks = useSavedWalkStore((state) => state.savedWalks);
+    const monthStats = getMonthStats(walks);
+    const months = [
+        "Styczeń",
+        "Luty",
+        "Marzec",
+        "Kwiecień",
+        "Maj",
+        "Czerwiec",
+        "Lipiec",
+        "Sierpień",
+        "Wrzesień",
+        "Październik",
+        "Listopad",
+        "Grudzień",
+    ];
+    const currentMonth = new Date().getMonth();
+    const CurrentMonthStats = monthStats.find((m) => m.month === months[currentMonth]);
     return (
         <ScrollView className="bg-gray-50 h-full"> 
             <View className="py-10 px-1">
@@ -21,8 +41,8 @@ const StatsScreen = () => {
             <View className="px-7 gap-8 -mt-9 pb-10">
                 <ThisWeekStats />
                 <AllTime />
-                <MonthCard month="Styczeń" walks={10} distance={10} time={10} calories={10} steps={10} showYear={true} />
-                <DailyActivity day="Poniedziałek" isRest={true} />
+                <MonthCard month={CurrentMonthStats?.month || "Styczeń"} walks={CurrentMonthStats?.walks || 0} distance={CurrentMonthStats?.distance || 0} time={CurrentMonthStats?.duration || 0} calories={CurrentMonthStats?.calories || 0} steps={CurrentMonthStats?.steps || 0} showYear={true} />
+                <DailyActivity />
             </View>
         </ScrollView>
     );
