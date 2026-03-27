@@ -31,6 +31,7 @@ export const removeWalk = async (id: string) => {
             await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(filtered));
         }
     } catch (error) {
+        console.log("Błąd usuwania spaceru", error);
     }
 };
 

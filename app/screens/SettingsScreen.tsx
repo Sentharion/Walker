@@ -21,7 +21,6 @@ const SettingsScreen = () => {
                 <SettingsHeader />
             </View>
             <View className="px-7 -mt-7 flex-col gap-5 mb-20">
-                <Units />
                 <LocationAndNotifications />
                 <PrivacyPolicy />
                 <Help />
