@@ -3,6 +3,7 @@ import { useSavedWalkStore } from "@/store/savedStore";
 import { Trash2 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { removeWalk } from "@/utils/walksStorage";
+import { deleteWalkOnline } from "@/lib/walks";
 
 const DeleteWalk = () => {
     const router = useRouter();
@@ -12,7 +13,7 @@ const DeleteWalk = () => {
         if (selectedWalk) {
             Alert.alert("Usuń spacer", "Czy na pewno chcesz usunąć ten spacer?", [
                 { text: "Nie", style: "cancel" },
-                { text: "Tak", onPress: () => {removeWalk(selectedWalk.id); removeSavedWalk(selectedWalk.id); router.back();} }
+                { text: "Tak", onPress: async () => {await deleteWalkOnline(selectedWalk.id); await removeWalk(selectedWalk.id);  removeSavedWalk(selectedWalk.id); router.back();} }
             ]);
         }
     };
