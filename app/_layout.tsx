@@ -10,6 +10,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MapView from 'react-native-maps';
 import { useSession } from '../hooks/auto-login';
 import { useEffect } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 cssInterop(LinearGradient, {
   className: 'style',
@@ -39,6 +42,8 @@ export default function RootLayout() {
       // Redirect to the home page if they are logged in
       router.replace('/(tabs)');
     }
+
+    SplashScreen.hideAsync();
   }, [session, loading, segments, router]);
 
   return (

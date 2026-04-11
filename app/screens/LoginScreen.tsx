@@ -65,7 +65,7 @@ export default function LoginScreen() {
       <StatusBar style="light" />
 
       <ImageBackground
-        source={require("../../assets/images/WalkerSplash.png")}
+        source={require("../../assets/images/splash.png")}
         className="flex-1 "
       >
         <SafeAreaView className="flex-1 bg-black/40">

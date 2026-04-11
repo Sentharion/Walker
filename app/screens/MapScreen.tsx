@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import MapView, { Marker , Polyline} from "react-native-maps";
+import MapView, { Marker , Polyline, PROVIDER_DEFAULT} from "react-native-maps";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import { calculateTotalDistance } from "@/utils/distance";
@@ -56,7 +56,7 @@ const MapScreen = () => {
                     </TouchableOpacity>
                 </View>
             )}
-            <MapView style={{flex: 1}} onPress={handleMapPress}>
+            <MapView style={{flex: 1}} provider={PROVIDER_DEFAULT} onPress={handleMapPress}>
                 {points.map((point, index) => (
                     <Marker key={index} coordinate={point} onCalloutPress={() => removePoint(index)} title={`Punkt ${index + 1}`} description="Dotknij aby usunąć" pinColor="darkgreen" />
                 ))}

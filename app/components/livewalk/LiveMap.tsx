@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import MapView, {Polyline, Marker} from "react-native-maps";
+import MapView, {Polyline, Marker, PROVIDER_DEFAULT} from "react-native-maps";
 
 import { useRef, useEffect } from "react";
 import { useWalkStore } from "../../../store/walkStore";
@@ -58,6 +58,7 @@ const LiveMap = () => {
                 showsUserLocation={true}
                 followsUserLocation={true}
                 showsMyLocationButton={true}
+                provider={PROVIDER_DEFAULT}
                 initialRegion={{
                     latitude: 52.2297,
                     longitude: 21.0122,
