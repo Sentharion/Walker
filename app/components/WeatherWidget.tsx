@@ -120,7 +120,7 @@ const WeatherWidget = () => {
                 <Cloud size={18} color="gray" />
             </View>
             <View className='flex-row items-center gap-5 pt-3'>
-                <Text className='text-5xl'>{weatherData.weatherEmoji}</Text>
+                <Text className='text-[2.5rem]'>{weatherData.weatherEmoji}</Text>
                 <View className='flex-col items-start justify-center'>
                     <Text className='text-3xl font-bold'>{weatherData.temperature}°C</Text>
                     <Text className='text-md text-gray-500' numberOfLines={1}>{weatherData.conditions}</Text>

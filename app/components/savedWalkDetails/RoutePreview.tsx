@@ -1,5 +1,5 @@
 import { Text, View,} from "react-native";
-import MapView, {Polyline,Marker} from "react-native-maps";
+import MapView, {Polyline,Marker, PROVIDER_DEFAULT} from "react-native-maps";
 import { Point } from "../../../store/walkStore"
 import { useEffect,useRef, useState  } from "react";
 
@@ -27,7 +27,7 @@ const RoutePreview = ({points}: RoutePreviewProps) => {
     return (
         <View className="bg-white shadow-xl shadow-black/40 elevation-10 rounded-3xl mx-8 overflow-hidden">
             <Text className="p-5 text-xl font-semibold">Podgląd trasy</Text>
-            <MapView style={{width: "100%", height: 200, padding: 10}} ref={mapRef} scrollEnabled={true} zoomEnabled={true} pitchEnabled={false} rotateEnabled={false} onMapReady={() => setMapReady(true)}>
+            <MapView style={{width: "100%", height: 200, padding: 10}} provider={PROVIDER_DEFAULT} ref={mapRef} scrollEnabled={true} zoomEnabled={true} pitchEnabled={false} rotateEnabled={false} onMapReady={() => setMapReady(true)}>
                 <Polyline coordinates={points} strokeColor="#10b981" strokeWidth={5}/>
                 <Marker coordinate={points[0]} title="Początek" pinColor="#10b981"></Marker>
                 <Marker coordinate={points[points.length - 1]} title="Koniec" pinColor="#ef4444"></Marker>

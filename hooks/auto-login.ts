@@ -11,6 +11,9 @@ export function useSession() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setLoading(false)
+    }).catch((error) => {
+      console.error('Error fetching session:', error)
+      setLoading(false)
     })
 
     // Listen for auth changes

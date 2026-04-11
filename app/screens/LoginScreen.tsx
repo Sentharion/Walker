@@ -3,13 +3,14 @@ import {View,Text,TextInput,TouchableOpacity,ImageBackground,ScrollView,Keyboard
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import { Compass, User, Lock, LogIn, Mail } from "lucide-react-native";
+import { Compass, User, Lock, LogIn, Mail, Eye, EyeOff } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import {signUp, signInWithUsername} from "../../lib/auth"
 
 export default function LoginScreen() {
     const router = useRouter();
     const [isRegistering, setIsRegistering] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -60,12 +61,16 @@ export default function LoginScreen() {
             setLoading(false);
         }
     };
+
+    const makeVisible = () => {
+        setPasswordVisible(!passwordVisible);
+    }
   return (
     <View className="flex-1">
       <StatusBar style="light" />
 
       <ImageBackground
-        source={require("../../assets/images/WalkerSplash.png")}
+        source={require("../../assets/images/splash.png")}
         className="flex-1 "
       >
         <SafeAreaView className="flex-1 bg-black/40">
@@ -124,12 +129,21 @@ export default function LoginScreen() {
                       <TextInput
                         placeholder="Hasło"
                         placeholderTextColor="#9ca3af"
-                        secureTextEntry
+                        secureTextEntry={!passwordVisible}
                         value={password}
                         onChangeText={setPassword}
                         autoCapitalize="none"
                         className="bg-white/10 text-black rounded-2xl py-3.5 pl-12 pr-4 border border-emerald-500 font-medium"
                       />
+                      <View className="flex-row items-center">
+                        <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => makeVisible()}
+                        className="absolute right-4 top-1/2 -mt-[33px] z-20"
+                      >
+                        {passwordVisible ? <EyeOff size={22} color="#10b981" /> : <Eye size={22} color="#10b981" />}
+                      </TouchableOpacity>
+                      </View>
                     </View>
 
                     {/* Login Button */}
@@ -205,15 +219,26 @@ export default function LoginScreen() {
                         <Lock size={20} color="#10b981" />
                       </View>
 
-                      <TextInput
+                      <View className="flex-row items-center">
+                        <TextInput
                         placeholder="Hasło"
                         placeholderTextColor="#9ca3af"
-                        secureTextEntry
+                        secureTextEntry={!passwordVisible}
                         value={password}
                         onChangeText={setPassword}
                         autoCapitalize="none"
-                        className="bg-white/10 text-black rounded-2xl py-3.5 pl-12 pr-4 border border-emerald-500 font-medium"
+                        className="bg-white/10 flex-1 text-black rounded-2xl py-3.5 pl-12 pr-4 border border-emerald-500 font-medium"
                       />
+                        <View className="flex-row items-center">
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => makeVisible()}
+                            className="absolute right-4 top-1/2 -mt-[33px] z-20"
+                          >
+                            {passwordVisible ? <EyeOff size={22} color="#10b981" /> : <Eye size={22} color="#10b981" />}
+                        </TouchableOpacity>
+                        </View>
+                      </View>
                     </View>
 
                     {/* Register Button */}
