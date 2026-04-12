@@ -3,14 +3,15 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import '../global.css';
 
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground, Animated } from 'react-native';
 import { useSavedWalkStore } from '@/store/savedStore';
 import { cssInterop } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
 import MapView from 'react-native-maps';
 import { useSession } from '../hooks/auto-login';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +31,14 @@ export default function RootLayout() {
   const segments = useSegments();
   const router = useRouter();
 
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [fadeAnim] = useState(() => new Animated.Value(1));
+
+  useEffect(() => {
+    // Ukrywamy brzydki natywny splash od razu, po to by wjechał nasz fejk na React Native
+    SplashScreen.hideAsync();
+  }, []);
+
   useEffect(() => {
     if (loading) return;
 
@@ -43,11 +52,18 @@ export default function RootLayout() {
       router.replace('/(tabs)');
     }
 
-    SplashScreen.hideAsync();
-  }, [session, loading, segments, router]);
+    // Płynne, animowane chowanie naszego fejk-splasha kiedy aplikacja się ładuje
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start(() => setIsSplashVisible(false));
+
+  }, [session, loading, segments, router, fadeAnim]);
 
   return (
-    <>
+
+    <SafeAreaProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
@@ -201,7 +217,15 @@ export default function RootLayout() {
         />
       </Stack>
       <StatusBar style="auto" />
-
-    </>
+      {isSplashVisible && (
+        <Animated.View style={[{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 }, { opacity: fadeAnim }]}>
+          <ImageBackground 
+            source={require('../assets/images/splash.png')}
+            resizeMode="cover"
+            style={{ flex: 1, backgroundColor: '#ffffff' }}
+          />
+        </Animated.View>
+      )}
+      </SafeAreaProvider>
   );
 }

@@ -113,12 +113,20 @@ const DailyAcitivity = () => {
                         if(isRest){
                             return(
                                 <View key={dayData.day} className="flex-1 flex-row items-center justify-center bg-white/95 backdrop-blur rounded-2xl p-1">
-                                <View className="flex-row items-center gap-1 bg-emerald-500 rounded-2xl p-4">
-                                    <View className={`rounded-full border border-gray-300 bg-white w-14 h-14 items-center justify-center`}>
-                                        <Text className={`font-semibold text-xl text-black`}>{dayData.day}</Text>
+                                <View className="flex-row items-center gap-1 bg-emerald-500 rounded-2xl p-4 border border-emerald-400">
+                                     <LinearGradient
+                                colors={['#22c55e', '#16a34a']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                className={`rounded-full w-14 h-14 border border-emerald-400 items-center justify-center shadow-lg shadow-emerald-500/50`}
+                                >
+                                    <View>
+                                        <Text className={`font-semibold text-xl text-white`}>{dayData.day}</Text>
                                     </View>
+                                </LinearGradient>
+                                    
                                     <View className="flex-1 flex-row items-start justify-start px-5">
-                                        <Text className="text-black font-semibold text-lg">Odpoczynek</Text>
+                                        <Text className="text-white font-semibold text-lg">Odpoczynek</Text>
                                     </View>
                                 </View>
                             </View>
