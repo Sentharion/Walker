@@ -2,17 +2,22 @@ import { Tabs } from 'expo-router';
 import { Home, TrendingUp, Target, User, Settings} from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <Tabs
+      <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#d1fae5",
         tabBarStyle: {
           borderTopWidth: 0,
-          paddingVertical: 4,
+          paddingTop: 8,
+          paddingBottom: insets.bottom > 0 ? insets.bottom + 10 : 18,
+          height: 75 + (insets.bottom > 0 ? insets.bottom : 0),
           paddingHorizontal:15,
           elevation: 0,
           position: "absolute",
