@@ -35,12 +35,12 @@ export async function signInWithUsername(
     username: string,
     password: string,
 ) {
-    const clearUserName = username.trim().toLowerCase()
-    const { data:profile, error:profileError } = await supabase.from("profiles").select("id").eq("username",clearUserName).maybeSingle()
+    const clearUserName = username.trim();
+    const { data:userId, error:profileError } = await supabase.rpc("get_user_id_by_username", { search_username: clearUserName })
     if(profileError) throw profileError
-    if(!profile) throw new Error("Nie udało się znaleźć użytkownika")
+    if(!userId) throw new Error("Nie udało się znaleźć użytkownika")
 
-    const { data:userData, error:userError } = await supabase.rpc("get_user_email", { user_id: profile.id})
+    const { data:userData, error:userError } = await supabase.rpc("get_user_email", { user_id: userId})
     
     if (userError || !userData) throw new Error("Nie udało się zalogować");
 

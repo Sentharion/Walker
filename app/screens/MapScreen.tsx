@@ -56,11 +56,21 @@ const MapScreen = () => {
                     </TouchableOpacity>
                 </View>
             )}
-            <MapView style={{flex: 1}} provider={PROVIDER_DEFAULT} onPress={handleMapPress}>
+            <MapView 
+                style={{flex: 1}} 
+                provider={PROVIDER_DEFAULT} 
+                onPress={handleMapPress}
+                initialRegion={{
+                    latitude: 52.0693,
+                    longitude: 19.4803,
+                    latitudeDelta: 5.0,
+                    longitudeDelta: 5.0,
+                }}
+            >
                 {points.map((point, index) => (
                     <Marker key={index} coordinate={point} onCalloutPress={() => removePoint(index)} title={`Punkt ${index + 1}`} description="Dotknij aby usunąć" pinColor="darkgreen" />
                 ))}
-                {points.length > 1 && <Polyline coordinates={points} strokeColor="green" strokeWidth={4} />}
+                {points.length > 1 ? <Polyline coordinates={points} strokeColor="green" strokeWidth={4} /> : null}
             </MapView>
             <View className="flex-col w-full h-60 justify-center gap-5 bottom-10 bg-white rounded-t-3xl p-5">
                 <View className="flex-row justify-start items-center gap-2">
