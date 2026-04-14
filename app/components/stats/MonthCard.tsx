@@ -70,7 +70,7 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
                         </View>
                         <View className="flex-row gap-1">
                             <Text className="text-black font-semibold text-lg">{walks}</Text>
-                            <Text className="text-black text-lg">Spacerów</Text>
+                            <Text className="text-black text-lg">{walks === 1 ? "Spacer" : walks === 2 || walks === 3 || walks === 4 ? "Spacery" : "Spacerów"}</Text>
                         </View>
                     </View>
                 </View>
@@ -81,8 +81,8 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
                             <Text className="text-gray-600 font-semibold text-sm">Dystans</Text>
                         </View>
                         <View className="flex-col gap-1">
-                            <Text className="text-black font-semibold text-3xl">{distance.toFixed(1)}</Text>
-                            <Text className="text-gray-500 text-xs">Kilometrów</Text>
+                            <Text className="text-black font-semibold text-3xl">{distance >= 1000 ? (distance/1000).toFixed(1) : distance}</Text>
+                            <Text className="text-gray-500 text-xs">{distance >= 1000 ? "Kilometrów" : "Metrów"}</Text>
                         </View>
                     </View>
                 </View>
@@ -94,7 +94,7 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
                             </View>
                             <View className="flex-col gap-1 items-start justify-start">
                                 <Text className="text-black font-semibold text-xl">{value.value}</Text>
-                                <Text className="text-gray-500 text-md">{value.unit}</Text>
+                                <Text className="text-gray-500 text-xs">{value.unit}</Text>
                             </View>
                         </View>
                     ))}

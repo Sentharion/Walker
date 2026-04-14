@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { MapPin, Flame, Route, Clock, Footprints } from "lucide-react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
-import { getAllTimeStats } from "@/utils/stats";
+import { getAllTimeStats, formatDistance } from "@/utils/stats";
 
 
 
@@ -23,7 +23,7 @@ const AllTime = () => {
                 id: 1,
                 title: "Dystans",
                 subTitle: "Suma kilometrów",
-                value: stats.distance.toFixed(2),
+                value: formatDistance(stats.distance),
                 subValue: "km",
                 icon: <MapPin size={18} color="white" />,
                 color: "green",
@@ -51,7 +51,7 @@ const AllTime = () => {
                 title: "Spacery",
                 subTitle: "Liczba spacerów",
                 value: stats.walks,
-                subValue: "spacerów",
+                subValue: stats.walks === 1 ? "Spacer" : stats.walks === 2 || stats.walks === 3 || stats.walks === 4 ? "Spacery" : "Spacerów",
                 icon: <Route size={18} color="white" />,
                 color: "purple",
             },

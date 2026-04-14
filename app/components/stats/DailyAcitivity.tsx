@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { CalendarCheck, MapPin, Clock, Flame, Footprints } from "lucide-react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
-import { getDailyStats } from "@/utils/stats";
+import { getDailyStats,formatDistance } from "@/utils/stats";
 
 
 const DailyAcitivity = () => {
@@ -11,7 +11,7 @@ const DailyAcitivity = () => {
     const TodayIndex = (new Date().getDay() + 6) % 7;
 
     return (
-        <View className="px-2 py-2 mb-12 gap-2 flex-1 rounded-2xl overflow-hidden shadow-lg bg-white/95 backdrop-blur">
+        <View className="px-2 py-2 mb-20 gap-2 flex-1 rounded-2xl overflow-hidden shadow-lg bg-white/95 backdrop-blur">
             <View className="flex-row items-center justify-between px-2">
                 <Text className="text-gray-800 *:font-semibold text-lg p-2 " >Codzienna aktywność</Text>
                 <Text className="text-gray-500 text-xs">Ten tydzień</Text>
@@ -22,10 +22,10 @@ const DailyAcitivity = () => {
                     const isToday = index === TodayIndex;
                     const isRest = dayData.walks === 0;
                     const isPast = index < TodayIndex;
-                    const isFinished = dayData.finished === true;
+                    const isFinished = !isRest;
 
                     const tab = {
-                        distance: { label: "Dystans", value: `${dayData.distance.toFixed(1)} km`, icon: MapPin, color: "#3b82f6" },
+                        distance: { label: "Dystans", value: `${formatDistance(dayData.distance)}`, icon: MapPin, color: "#3b82f6" },
                         duration: { label: "Czas", value: `${Math.floor(dayData.duration / 60)} min`, icon: Clock, color: "#ef4444" },
                         steps: { label: "Kroki", value: dayData.steps.toLocaleString(), icon: Footprints, color: "#10b981" },
                         calories: { label: "Kalorie", value: `${dayData.calories.toFixed(1)} kcal`, icon: Flame, color: "#f59e0b" },
@@ -66,7 +66,7 @@ const DailyAcitivity = () => {
                                                     <Text className="text-white text-md font-bold">{dayData.day}</Text>
                                                 </View>
                                                 <View className="flex-row items-center gap-2">
-                                                    <Text className="text-white text-xs">{dayData.walks} spacer</Text>
+                                                    <Text className="text-white text-xs">{dayData.walks} {dayData.walks === 1 ? "Spacer" : dayData.walks === 2 || dayData.walks === 3 || dayData.walks === 4 ? "Spacery" : "Spacerów"}</Text>
                                                 </View>
                                             </View>
                                             <View className="w-full bg-white/95 rounded-2xl p-4">
@@ -149,7 +149,7 @@ const DailyAcitivity = () => {
                                             <Text className="text-white text-md font-bold">{dayData.day}</Text>
                                         </View>
                                         <View className="flex-row items-center gap-2">
-                                            <Text className="text-white text-xs">{dayData.walks} spacer</Text>
+                                            <Text className="text-white text-xs">{dayData.walks} {dayData.walks === 1 ? "Spacer" : dayData.walks === 2 || dayData.walks === 3 || dayData.walks === 4 ? "Spacery" : "Spacerów"}</Text>
                                         </View>
                                     </View>
                                       <View className="w-full bg-white/95 rounded-2xl p-4">

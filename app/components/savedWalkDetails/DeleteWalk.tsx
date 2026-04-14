@@ -13,7 +13,7 @@ const DeleteWalk = () => {
         if (selectedWalk) {
             Alert.alert("Usuń spacer", "Czy na pewno chcesz usunąć ten spacer?", [
                 { text: "Nie", style: "cancel" },
-                { text: "Tak", onPress: async () => {await deleteWalkOnline(selectedWalk.id); await removeWalk(selectedWalk.id);  removeSavedWalk(selectedWalk.id); router.back();} }
+                { text: "Tak", onPress: () => { removeSavedWalk(selectedWalk.id); router.back(); } }
             ]);
         }
     };

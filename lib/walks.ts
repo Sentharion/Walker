@@ -89,17 +89,27 @@ export async function loadWalksOnline() {
     }))
 }
 
-export async function deleteWalkOnline(walkId: string | number) {
+export async function deleteWalkOnline(walkId: string | number, createdAt?: string) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return;
 
     // Supabase will automatically delete walk_points if 'on delete cascade' is set.
     // If not, we should delete them manually or ensure the schema is correct.
-    const { error } = await supabase
+    let { error } = await supabase
         .from('walks')
         .delete()
         .eq('id', walkId)
         .eq('user_id', user.id)
+
+    if (createdAt) {
+        const { error: error2 } = await supabase
+            .from('walks')
+            .delete()
+            .eq('created_at', createdAt)
+            .eq('user_id', user.id)
+            
+        if (error2) error = error2;
+    }
 
     if (error) {
         console.error("Error deleting walk online:", error);

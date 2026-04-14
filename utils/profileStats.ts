@@ -5,9 +5,9 @@ export const getRecords = (walks: SavedWalk[]) => {
 
     if(finishedWalks.length === 0) {
         return {
-            distance: {distance: 0, createdAt: ""},
-            time: {duration: 0, createdAt: ""},
-            steps: {steps: 0, createdAt: ""},
+            distance: {distance: 0, createdAt: "", finishedAt: ""},
+            time: {duration: 0, createdAt: "", finishedAt: ""},
+            steps: {steps: 0, createdAt: "", finishedAt: ""},
         }
     }
 
@@ -24,14 +24,14 @@ export const getRecords = (walks: SavedWalk[]) => {
 }
 
 export const getRecentWalks = (walks: SavedWalk[],limit:number = 3) => {
-    return walks.filter(w => w.finished).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, limit);
+    return walks.filter(w => w.finished).sort((a, b) => new Date(b.finishedAt || b.createdAt).getTime() - new Date(a.finishedAt || a.createdAt).getTime()).slice(0, limit);
 }
 
 export const getStreak = (walks: SavedWalk[]) => {
     const finishedWalks = walks.filter(w => w.finished);
 
     const walkedDays = new Set(
-        finishedWalks.map(w => new Date(w.createdAt).toDateString())
+        finishedWalks.map(w => new Date(w.finishedAt || w.createdAt).toDateString())
     );
 
     let streak = 0;
