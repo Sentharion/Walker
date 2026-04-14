@@ -1,4 +1,5 @@
 import { getWalks, updateWalkStorage, removeWalk } from "@/utils/walksStorage";
+import { Alert } from "react-native";
 import { create } from "zustand";
 import { loadWalksOnline, deleteWalkOnline } from "../lib/walks";
 
@@ -19,6 +20,7 @@ export type SavedWalk = {
     finished:boolean;
     note: string;
     createdAt: string;
+    finishedAt: string;
 };
 
 type walkStore = {
@@ -33,21 +35,25 @@ type walkStore = {
 };
 
 
-export const useSavedWalkStore = create<walkStore>((set) => ({
+export const useSavedWalkStore = create<walkStore>((set, get) => ({
     savedWalks: [],
     addSavedWalk: (walk) => set((state) => ({ savedWalks: [...state.savedWalks, walk] })),
     removeSavedWalk: async (id) => {
+        const walkToDelete = get().savedWalks.find(w => String(w.id) === String(id));
+        const createdAt = walkToDelete?.createdAt;
+
         set((state) => ({ 
-            savedWalks: state.savedWalks.filter((w) => w.id !== id),
+            savedWalks: state.savedWalks.filter((w) => String(w.id) !== String(id)),
             selectedWalk: state.selectedWalk?.id === id ? null : state.selectedWalk
         }));
         
-        // Finalize deletion in both storages
         await removeWalk(id);
         try {
-            await deleteWalkOnline(id);
-        } catch (e) {
+            await deleteWalkOnline(id, createdAt);
+            Alert.alert("Sukces", "Pomyślnie usunięto spacer");
+        } catch (e: any) {
             console.error("Failed to delete walk from Supabase", e);
+            Alert.alert("Błąd usuwania", `Błąd z bazy: ${e?.message || JSON.stringify(e)}`);
         }
     },
     selectedWalk: null,
@@ -58,31 +64,20 @@ export const useSavedWalkStore = create<walkStore>((set) => ({
     })),
     finishWalk: async (id, data) => {
         set((state) => ({
-            savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, ...data, finished: true } : w),
-            selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, ...data, finished: true } : state.selectedWalk
+            savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, ...data, finished: true, finishedAt: new Date().toISOString() } : w),
+            selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, ...data, finished: true, finishedAt: new Date().toISOString() } : state.selectedWalk
         }));
-        await updateWalkStorage(id, { ...data, finished: true });
+        await updateWalkStorage(id, { ...data, finished: true, finishedAt: new Date().toISOString() });
     },
 
     loadSavedWalks: async () => {
         try {
-            // 1. Load local walks
             const localWalks = await getWalks();
-            
-            // 2. Load online walks
-            const onlineWalks = await loadWalksOnline();
-
-            // 3. Merge them (using ID as key to avoid duplicates)
-            // Note: Currently local IDs are timestamps, Supabase IDs are UUIDs or integers.
-            // For now, let's just combine them and assume they are distinct or handle basic de-duplication if needed.
-            // Better: If an online walk has the same name/date, it might be the same.
-            
+            const onlineWalks = await loadWalksOnline();        
             const combined = [...(localWalks || [])];
             
             if (onlineWalks && onlineWalks.length > 0) {
                 onlineWalks.forEach((ow: any) => {
-                    // Unique check by ID (since we now use UUIDs everywhere)
-                    // Or fallback to createdAt/name for legacy data
                     const exists = combined.some(lw => lw.id === ow.id || lw.createdAt === ow.createdAt);
                     if (!exists) {
                         combined.push(ow);
@@ -90,7 +85,6 @@ export const useSavedWalkStore = create<walkStore>((set) => ({
                 });
             }
 
-            // Sort by date descending
             combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
             set({ savedWalks: combined });

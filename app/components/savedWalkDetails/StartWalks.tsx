@@ -2,6 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { useWalkStore } from "@/store/walkStore";
 import { useRouter } from "expo-router";
+import { formatDate } from "@/utils/stats";
 
 
 const StartWalks = () => {
@@ -19,6 +20,7 @@ const StartWalks = () => {
     const setNote = useWalkStore((state) => state.setNote);
     const startWalk = useWalkStore((state) => state.startWalk);
     const resetWalk = useWalkStore((state) => state.resetWalk);
+    
 
     const handleStart = () => {
         if (!selectedWalk) return;
@@ -65,7 +67,7 @@ const StartWalks = () => {
                 </View>
                 <View className="flex-col items-start">
                     <Text className="text-green-900 font-bold text-md">Spacer zakończony!</Text>
-                    <Text className="text-green-700 font-bold text-sm">Ukończyłeś ten spacer</Text>
+                    <Text className="text-green-700 font-bold text-sm">Ukończyłeś ten spacer {formatDate(selectedWalk?.finishedAt)}</Text>
                 </View>
             </View>
         )

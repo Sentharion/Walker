@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ChevronRight, Clock, Footprints, MapPin, Play } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
+import { formatDate } from "@/utils/stats";
 
 interface WalkCardProps {
     walk:SavedWalk
@@ -37,11 +38,6 @@ const WalkCard = ({walk}: WalkCardProps) => {
         return `${Math.round(distance)} m`;
     }
 
-
-    const formatDate = (date: string) => {
-        const d = new Date(date);
-        return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
-    }
 
     const formatTime = (time: number) => {
         const hours = Math.floor(time / 3600);
@@ -96,7 +92,7 @@ const WalkCard = ({walk}: WalkCardProps) => {
                        <View className="flex-row w-full items-center px-2 gap-3 mb-2 justify-between">
                         <View className="flex-col items-start justify-center">
                             <Text className="text-xl text-white font-semibold">{walk.name}</Text>
-                            <Text className="text-md text-white ">{formatDate(walk.createdAt)}</Text>
+                            <Text className="text-md text-white ">{formatDate(walk.finishedAt || walk.createdAt)}</Text>
                         </View>
                             <View className="flex-row items-center gap-1">
                                 <Text className={`text-md text-white font-semibold ${walk.difficulty === "Łatwy" ? "bg-green-500" : walk.difficulty === "Średni" ? "bg-yellow-500" : "bg-red-500"} rounded-full px-2 py-1`}>{walk.difficulty}</Text>

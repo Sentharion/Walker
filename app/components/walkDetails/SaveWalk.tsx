@@ -37,14 +37,13 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
             calories: calories || 0,
             finished: false,
             createdAt: new Date().toISOString(),
+            finishedAt: "",
         };
 
         try {
-            // 1. Zapisz lokalnie
             await saveWalk(newWalk);
             addSavedWalk(newWalk);
 
-            // 2. Zapisz online (jeśli zalogowany)
             await saveWalkOnline({
                 name: newWalk.name,
                 difficulty: newWalk.difficulty,
@@ -62,15 +61,13 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
             router.replace("/");
         } catch (error: any) {
             console.error("Error saving walk:", error);
-            // Even if online failes, we have it local, but we might want to warn
-            // alert("Zapisano lokalnie, ale wystąpił błąd przy synchronizacji online.");
             resetWalk();
             router.replace("/");
         }
     };
     return (
-        <View className="bg-white justify-end w-full pb-8 pt-4 mt- gap-3 border-t border-gray-200 shadow-sm">
-            <TouchableOpacity className="my-2 mx-8 bg-green-500 rounded-3xl py-4" activeOpacity={0.8} onPress={handleSaveWalk}>
+        <View className="bg-white justify-end w-full pb-8 pt-4 gap-3 border-t border-gray-200 shadow-sm">
+            <TouchableOpacity className="my-2 mx-8 bg-green-500 rounded-3xl py-4 mb-20" activeOpacity={0.8} onPress={handleSaveWalk}>
                 <Text className="text-white text-center text-lg font-bold">Zapisz spacer</Text>
             </TouchableOpacity>
         </View>

@@ -1,4 +1,28 @@
 import {SavedWalk} from "@/store/savedStore";
+import {Goal} from "@/store/goalStore";
+
+export const calculateGoalProgress = (goal: Goal, walks: SavedWalk[]) => {
+    let current = 0;
+    const goalStart = new Date(goal.createdAt).getTime();
+
+    walks.forEach(walk => {
+        if(!walk.finished) return;
+        const walkDate = new Date(walk.finishedAt || walk.createdAt).getTime();
+        
+        if(walkDate >= goalStart) {
+            if(goal.type === "km") current += walk.distance / 1000;
+            else if(goal.type === "kroki") current += walk.steps;
+            else if(goal.type === "spacery") current += 1;
+            else if(goal.type === "h") current += walk.duration / 3600;
+        }
+    });
+
+    if (goal.type === "km" || goal.type === "h") {
+        current = parseFloat(current.toFixed(2));
+    }
+    
+    return current;
+}
 
 export const getAllTimeStats = (walks: SavedWalk[]) => {
     return walks.reduce((acc, walk) => {
@@ -27,7 +51,7 @@ export const getThisWeekStats = (walks: SavedWalk[]) => {
     startOfWeek.setHours(0, 0, 0, 0);
     
     return walks.reduce((acc, walk) => {
-       const walkDate = new Date(walk.createdAt);
+       const walkDate = new Date(walk.finishedAt || walk.createdAt);
        if(walkDate >= startOfWeek && walk.finished){
         acc.distance += walk.distance;
         acc.duration += walk.duration;
@@ -68,7 +92,7 @@ export const getDailyStats = (walks: SavedWalk[]) => {
 
     walks.forEach(walk => {
         if(!walk.finished) return;
-        const walkDate = new Date(walk.createdAt);
+        const walkDate = new Date(walk.finishedAt || walk.createdAt);
         const dayIndex = (walkDate.getDay() + 6) % 7;
 
         if(walkDate >= startOfWeek && walkDate <= endOfWeek){
@@ -77,6 +101,7 @@ export const getDailyStats = (walks: SavedWalk[]) => {
             result[dayIndex].steps += walk.steps;
             result[dayIndex].calories += walk.calories;
             result[dayIndex].walks+=1;
+            result[dayIndex].finished = true;
         }
     });
     
@@ -100,7 +125,7 @@ export const getMonthStats = (walks: SavedWalk[]) => {
 
     walks.forEach(walk => {
         if(!walk.finished) return;
-        const walkDate = new Date(walk.createdAt);
+        const walkDate = new Date(walk.finishedAt || walk.createdAt);
         const monthIndex = walkDate.getMonth(); // 0-11
 
         result[monthIndex].distance += walk.distance;
@@ -111,4 +136,16 @@ export const getMonthStats = (walks: SavedWalk[]) => {
     });
 
     return result;
+}
+
+export const formatDate = (date: string) => {
+    const d = new Date(date);
+    return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+export const formatDistance = (distance: number) => {
+    if(distance >= 1000){
+        return `${(distance / 1000).toFixed(1)} km`;
+    }
+    return `${distance} m`;
 }

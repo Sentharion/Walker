@@ -27,7 +27,7 @@ export const removeWalk = async (id: string) => {
         const existing = await AsyncStorage.getItem(WALKS_STORAGE_KEY);
         if (existing) {
             const walks = JSON.parse(existing);
-            const filtered = walks.filter((w: any) => w.id !== id);
+            const filtered = walks.filter((w: any) => String(w.id) !== String(id));
             await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(filtered));
         }
     } catch (error) {
@@ -54,7 +54,10 @@ export const hasWalkedToday = async (): Promise<boolean> => {
     try {
         const walks = await getWalks();
         const today = new Date().toISOString().split('T')[0];
-        return walks.some((walk: any) => walk.createdAt && walk.createdAt.startsWith(today));
+        return walks.some((walk: any) => {
+            const dateToCheck = walk.finishedAt || walk.createdAt;
+            return dateToCheck && dateToCheck.startsWith(today);
+        });
     } catch (error) {
         return false;
     }

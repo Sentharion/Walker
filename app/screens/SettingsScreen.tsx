@@ -20,7 +20,7 @@ const SettingsScreen = () => {
                 />
                 <SettingsHeader />
             </View>
-            <View className="px-7 -mt-7 flex-col gap-5 mb-20">
+            <View className="px-7 -mt-7 flex-col gap-5 mb-32">
                 <LocationAndNotifications />
                 <PrivacyPolicy />
                 <Help />

@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { getThisWeekStats } from "@/utils/stats";
 
+
 const ThisWeekStats = () => {
     const walks = useSavedWalkStore(state => state.savedWalks);
     const stats = getThisWeekStats(walks);
@@ -24,7 +25,7 @@ const ThisWeekStats = () => {
                         </View>
                         <Text className="text-white font-semibold text-lg">Mój tydzień</Text>
                     </View>
-                    <Text className="text-blue-100 ">{stats.walks} spacerów</Text>
+                    <Text className="text-blue-100 ">{stats.walks} {stats.walks === 1 ? "Spacer" : stats.walks === 2 || stats.walks === 3 || stats.walks === 4 ? "Spacery" : "Spacerów"}</Text>
                 </View>
                 <View className="flex-row gap-5 px-6">
                     <View className="flex-1 bg-white/95 backdrop-blur rounded-2xl p-4">
@@ -33,8 +34,8 @@ const ThisWeekStats = () => {
                             <Text className="text-gray-600 font-semibold text-sm">Dystans</Text>
                         </View>
                         <View className="flex-col gap-1">
-                            <Text className="text-black font-semibold text-3xl">{stats.distance}</Text>
-                            <Text className="text-gray-500 text-xs">Kilometrów</Text>
+                            <Text className="text-black font-semibold text-3xl">{stats.distance >= 1000 ? (stats.distance/1000).toFixed(1) : stats.distance}</Text>
+                            <Text className="text-gray-500 text-xs">{stats.distance >= 1000 ? "Kilometrów" : "Metrów"}</Text>
                         </View>
                     </View>
                     <View className="flex-1 bg-white/95 backdrop-blur rounded-2xl p-4">
