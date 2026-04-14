@@ -8,7 +8,7 @@ const MonthsScreen = () => {
     const monthStats = getMonthStats(walks);
     return (
             <ScrollView className="flex flex-col gap-5 px-6 py-6">
-                <View className="flex flex-col gap-5">
+                <View className="flex flex-col gap-5 mb-32">
                     {monthStats.map((month) => (
                         <MonthCard key={month.month} month={month.month} walks={month.walks} distance={month.distance} time={month.duration} calories={month.calories} steps={month.steps} />
                     ))}

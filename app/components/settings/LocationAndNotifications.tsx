@@ -107,15 +107,6 @@ const LocationAndNotifications = () => {
                         innerCircleStyle={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1 }}
                     />
                 </View>
-                {notificationBlocked && (
-                    <TouchableOpacity 
-                        onPress={() => Linking.openSettings()}
-                        className="flex-row items-center gap-1.5 mt-2.5 ml-14"
-                    >
-                        <Text className="text-[12px] text-red-500 font-semibold tracking-tight">Wymagane uprawnienia. Zmień w ustawieniach</Text>
-                        <ExternalLink size={12} color="#ef4444" strokeWidth={3} />
-                    </TouchableOpacity>
-                )}
             </View>
 
             {/* Location Section */}
@@ -145,15 +136,6 @@ const LocationAndNotifications = () => {
                         innerCircleStyle={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1 }}
                     />
                 </View>
-                {locationBlocked && (
-                    <TouchableOpacity 
-                        onPress={() => Linking.openSettings()}
-                        className="flex-row items-center gap-1.5 mt-2.5 ml-14"
-                    >
-                        <Text className="text-[12px] text-red-500 font-semibold tracking-tight">Lokalizacja zablokowana. Kliknij by zmienić</Text>
-                        <ExternalLink size={12} color="#ef4444" strokeWidth={3} />
-                    </TouchableOpacity>
-                )}
             </View>
         </View>
     );

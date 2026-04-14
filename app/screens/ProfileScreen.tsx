@@ -21,7 +21,7 @@ const ProfileScreen = () => {
                     end={{ x: 1, y: 0 }}
                 />
             </View>
-            <View className="px-7 -mt-20 flex-col gap-5 mb-24">
+            <View className="px-7 -mt-20 flex-col gap-5 mb-32">
                 <ProfileInfo isEditing={isEditing} setIsEditing={setIsEditing} />
                 <MyRecords />
                 <RecentActivity />

@@ -1,4 +1,5 @@
 import { getWalks, updateWalkStorage, removeWalk } from "@/utils/walksStorage";
+import { Alert } from "react-native";
 import { create } from "zustand";
 import { loadWalksOnline, deleteWalkOnline } from "../lib/walks";
 
@@ -46,12 +47,13 @@ export const useSavedWalkStore = create<walkStore>((set, get) => ({
             selectedWalk: state.selectedWalk?.id === id ? null : state.selectedWalk
         }));
         
-        // Finalize deletion in both storages
         await removeWalk(id);
         try {
             await deleteWalkOnline(id, createdAt);
-        } catch (e) {
+            Alert.alert("Sukces", "Pomyślnie usunięto spacer");
+        } catch (e: any) {
             console.error("Failed to delete walk from Supabase", e);
+            Alert.alert("Błąd usuwania", `Błąd z bazy: ${e?.message || JSON.stringify(e)}`);
         }
     },
     selectedWalk: null,
