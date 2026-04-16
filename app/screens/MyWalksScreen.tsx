@@ -1,7 +1,7 @@
+import { useSavedWalkStore } from "@/store/savedStore";
 import React from "react";
-import {useSavedWalkStore} from "@/store/savedStore";
-import WalkCard from "../components/WalkCard";
 import { ScrollView, View } from "react-native";
+import WalkCard from "../components/WalkCard";
 
 const MyWalksScreen = () => {
     const savedWalks = useSavedWalkStore((state: any) => state.savedWalks);

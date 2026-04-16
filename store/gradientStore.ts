@@ -6,9 +6,11 @@ import { getGradient, saveGradient, type Gradient } from "@/utils/gradient"
 interface GradientState {
     gradient: Gradient;
     draftGradient: Gradient;
+    isEditing: boolean;
 
     setGradient: (gradient: Gradient) => void;
     setDraftGradient: (gradient: Gradient) => void;
+    setIsEditing: (isEditing: boolean) => void;
 
     loadGradient: () => Promise<void>;
 
@@ -17,8 +19,12 @@ interface GradientState {
 }
 
 export const useGradientStore = create<GradientState>((set, get) => ({
-    gradient: ['#a855f7', '#db2777'],
-    draftGradient: ['#a855f7', '#db2777'],
+    gradient: {id: 0, colors: ['#a855f7', '#db2777']},
+    draftGradient: {id: 0, colors: ['#a855f7', '#db2777']},
+    isEditing: false,
+    setIsEditing: (isEditing: boolean) => {
+        set({ isEditing });
+    },
     setGradient: async (gradient: Gradient) => {
         set({ gradient });
         await saveGradient(gradient);
@@ -28,8 +34,12 @@ export const useGradientStore = create<GradientState>((set, get) => ({
     },
     loadGradient: async () => {
         const gradient = await getGradient();
-        if (gradient) {
+        if (gradient && Array.isArray(gradient.colors)) {
             set({ gradient: gradient, draftGradient: gradient });
+        } else {
+            console.warn("Loaded gradient is invalid, using default");
+            const defaultGradient: Gradient = {id: 0, colors: ["#a855f7", "#db2777"]};
+            set({ gradient: defaultGradient, draftGradient: defaultGradient });
         }
     },
     saveDraftGradient: async () => {

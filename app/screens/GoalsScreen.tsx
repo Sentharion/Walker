@@ -1,11 +1,11 @@
-import { ScrollView, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import GoalsHeader from "../components/goals/GoalsHeader";
-import GoalCard from "../components/goals/GoalCard";
-import { useGoalStore, Goal } from "@/store/goalStore";
-import { useEffect } from "react";
+import { Goal, useGoalStore } from "@/store/goalStore";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { calculateGoalProgress } from "@/utils/stats";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
+import { ScrollView, Text, View } from "react-native";
+import GoalCard from "../components/goals/GoalCard";
+import GoalsHeader from "../components/goals/GoalsHeader";
 
 
 

@@ -1,9 +1,9 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import MapView, { Marker , Polyline, PROVIDER_DEFAULT} from "react-native-maps";
+import { useWalkStore } from "@/store/walkStore";
+import { calculateTotalDistance } from "@/utils/distance";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
-import { calculateTotalDistance } from "@/utils/distance";
-import { useWalkStore } from "@/store/walkStore";
+import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from "react-native-maps";
 
 const MapScreen = () => {
     const router = useRouter();
@@ -58,7 +58,9 @@ const MapScreen = () => {
             )}
             <MapView 
                 style={{flex: 1}} 
-                provider={PROVIDER_DEFAULT} 
+                provider={PROVIDER_DEFAULT}
+                showsMyLocationButton={true} 
+                showsUserLocation={true}
                 onPress={handleMapPress}
                 initialRegion={{
                     latitude: 52.0693,

@@ -1,8 +1,8 @@
-import { Square,Pause,Play } from "lucide-react-native";
-import { Text, TouchableOpacity, View } from "react-native";
-import { useWalkStore } from "../../../store/walkStore";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { useRouter } from "expo-router";
+import { Pause, Play, Square } from "lucide-react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { useWalkStore } from "../../../store/walkStore";
 
 
 const StartandStop = () => {
@@ -26,25 +26,21 @@ const StartandStop = () => {
 
     const templatePoints = useWalkStore((state) => state.templatePoints);
 
-    const handleFinish = async () => {
-        console.log("selectedWalk:", selectedWalk);
-        console.log("savedWalks:", useSavedWalkStore.getState().savedWalks);
-        if (selectedWalk) {
-            // Preserve route points if no GPS points recorded
-            const savedPoints = points.length > 0 
-                ? points 
-                : (templatePoints.length > 0 ? templatePoints : selectedWalk.points);
-            
-            const savedDistance = distance > 0 ? distance : selectedWalk.distance;
+    const resetWalk = useWalkStore((state) => state.resetWalk);
 
+    const handleFinish = async () => {
+        if (selectedWalk) {
             await finishWalk(selectedWalk.id, {
-                points: savedPoints,
-                distance: savedDistance,
+                points: points.length > 0 ? points : selectedWalk.points,
+                templatePoints: templatePoints.length > 0 ? templatePoints : selectedWalk.templatePoints,
+                distance: distance > 0 ? distance : selectedWalk.distance,
                 duration,
                 steps,
                 calories
             });
         }
+        stopWalk();
+        resetWalk();
         router.back();
     };
 

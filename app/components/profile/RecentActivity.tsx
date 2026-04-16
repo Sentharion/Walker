@@ -1,7 +1,7 @@
 import { MapPin } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { useSavedWalkStore } from "../../../store/savedStore";
-import { getRecentWalks,formatDate} from "../../../utils/profileStats";
+import { formatDate, getRecentWalks } from "../../../utils/profileStats";
 import { formatDistance } from "../../../utils/stats";
 
 const RecentActivity = () => {

@@ -15,6 +15,8 @@ const colors: Record<string, string> = {
 };
 
 
+
+
 const AllTime = () => {
     const walks = useSavedWalkStore(state => state.savedWalks);
     const stats = getAllTimeStats(walks);

@@ -4,19 +4,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Camera, Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { pickImage, updateProfile } from "../../../lib/avatar";
+import { pickImage } from "../../../lib/avatar";
 
-interface ProfileProps{
-    isEditing:boolean;
-    setIsEditing: (isEditing: boolean) => void;
-}
-
-const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
+const ProfileInfo = () => {
     const storeAvatar = useUserStore((state) => state.avatar);
     const storeUsername = useUserStore((state) => state.username);
     const storeMotto = useUserStore((state) => state.motto);
     const setProfile = useUserStore((state) => state.setProfile);
     const loadProfileStore = useUserStore((state) => state.loadProfile);
+    const isEditing = useGradientStore((state) => state.isEditing);
+    const setIsEditing = useGradientStore((state) => state.setIsEditing);
 
     const [draftAvatar, setDraftAvatar] = useState<string | null>(storeAvatar);
     const [draftName, setDraftName] = useState(storeUsername);
@@ -25,7 +22,6 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
     const setDraftGradient = useGradientStore((state) => state.setDraftGradient);
     const saveDraftGradient = useGradientStore((state) => state.saveDraftGradient);
     const resetDraftGradient = useGradientStore((state) => state.resetDraftGradient);
-
     const gradients: { id: number; colors: [string, string] }[] = [
         { id: 1, colors: ["#a855f7", "#db2777"] },
         { id: 2, colors: ["#f97316", "#ef4444"] },
@@ -121,13 +117,13 @@ const ProfileInfo = ({isEditing, setIsEditing}: ProfileProps) => {
                 </View>
             </View>
             <View className="w-full mt-2">
-                <Text className="text-md mb-4 text-start font-semibold text-gray-700">Zmień kolor tła profilu</Text>
+                <Text className="text-md mb-4 text-start font-semibold text-gray-700">Zmień kolor profilu</Text>
                 <View className="flex-row items-center justify-center gap-2 flex-wrap">
                     {gradients.map((gradient) => (
                         <TouchableOpacity 
                             key={gradient.id} 
                             className="w-10 h-10 rounded-full bg-gray-200 flex-row items-center justify-center overflow-hidden"
-                            onPress={() => setDraftGradient(gradient.colors)}
+                            onPress={() => setDraftGradient(gradient)}
                         >
                             <LinearGradient
                                 colors={gradient.colors}
