@@ -1,20 +1,36 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { AppState, AppStateStatus, Text, View } from "react-native";
 import { useWalkStore } from "../../../store/walkStore";
 
 const Timer = () => {
     const duration = useWalkStore((state) => state.duration);
     const isWalking = useWalkStore((state) => state.isWalking);
     const setDuration = useWalkStore((state) => state.setDuration);
+    const startTime = useWalkStore((state) => state.startTime);
     useEffect(() => {
-        if (isWalking) {
+        if (isWalking && startTime) {
             const interval = setInterval(() => {
-                setDuration(prev => prev + 1);
+                const now = Date.now();
+                const duration = Math.floor((now - startTime) / 1000);
+                setDuration(duration);
             }, 1000);
-            return () => clearInterval(interval);
+
+            const handleAppStateChange = (nextAppState: AppStateStatus) => {
+                if (nextAppState === "active") {
+                    const now = Date.now();
+                    const duration = Math.floor((now - startTime) / 1000);
+                    setDuration(duration);
+                }
+            };
+            const subscription = AppState.addEventListener("change", handleAppStateChange);
+
+            return () => {
+                clearInterval(interval);
+                subscription.remove();
+            };
         }
-    }, [isWalking]);
+    }, [isWalking, startTime, setDuration]);
     const formattedTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);

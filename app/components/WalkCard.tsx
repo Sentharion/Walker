@@ -93,7 +93,7 @@ const WalkCard = ({walk}: WalkCardProps) => {
                        <View className="flex-row w-full items-center px-2 gap-3 mb-2 justify-between">
                         <View className="flex-col items-start justify-center">
                             <Text className="text-xl text-white font-semibold">{walk.name}</Text>
-                            <Text className="text-md text-white ">{formatDate(walk.finishedAt || walk.createdAt)}</Text>
+                            <Text className="text-md text-white ">{formatDate(walk.createdAt)}</Text>
                         </View>
                             <View className="flex-row items-center gap-1">
                                 <Text className={`text-md text-white font-semibold ${walk.difficulty === "Łatwy" ? "bg-green-500" : walk.difficulty === "Średni" ? "bg-yellow-500" : "bg-red-500"} rounded-full px-2 py-1`}>{walk.difficulty}</Text>

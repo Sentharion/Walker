@@ -29,12 +29,18 @@ const StartandStop = () => {
     const resetWalk = useWalkStore((state) => state.resetWalk);
 
     const handleFinish = async () => {
+        let finalDuration = duration;
+        const currentStartTime = useWalkStore.getState().startTime;
+        if (isWalking && currentStartTime) {
+            finalDuration = Math.floor((Date.now() - currentStartTime) / 1000);
+        }
+
         if (selectedWalk) {
             await finishWalk(selectedWalk.id, {
                 points: points.length > 0 ? points : selectedWalk.points,
                 templatePoints: templatePoints.length > 0 ? templatePoints : selectedWalk.templatePoints,
                 distance: distance > 0 ? distance : selectedWalk.distance,
-                duration,
+                duration: finalDuration,
                 steps,
                 calories
             });
