@@ -63,7 +63,7 @@ const WalkStats = () => {
         },
         {
             name: "Kalorie",
-            value: calories.toFixed(2),
+            value: Math.floor(calories),
             unit: "kcal"
         },
 

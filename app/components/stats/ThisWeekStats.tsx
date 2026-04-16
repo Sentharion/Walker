@@ -66,7 +66,7 @@ const ThisWeekStats = () => {
                             <Text className="text-gray-600 font-semibold text-sm">Kalorie</Text>
                         </View>
                         <View className="flex-col gap-1">
-                            <Text className="text-black font-semibold text-3xl">{stats.calories.toFixed(1)}</Text>
+                            <Text className="text-black font-semibold text-3xl">{Math.floor(stats.calories)}</Text>
                             <Text className="text-gray-500 text-xs">Spalono</Text>
                         </View>
                     </View>
