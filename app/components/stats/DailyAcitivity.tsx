@@ -4,7 +4,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { CalendarCheck, Clock, Flame, Footprints, MapPin } from "lucide-react-native";
 import { Text, View } from "react-native";
 
-
 const DailyAcitivity = () => {
     const walks = useSavedWalkStore(state => state.savedWalks);
     const stats = getDailyStats(walks);
@@ -25,7 +24,7 @@ const DailyAcitivity = () => {
                     const isFinished = !isRest;
 
                     const tab = {
-                        distance: { label: "Dystans", value: `${formatDistance(dayData.distance)}`, icon: MapPin, color: "#3b82f6" },
+                        distance: { label: "Dystans", value: `${formatDistance(dayData.distance,true)}`, icon: MapPin, color: "#3b82f6" },
                         duration: { label: "Czas", value: `${Math.floor(dayData.duration / 60)} min`, icon: Clock, color: "#ef4444" },
                         steps: { label: "Kroki", value: dayData.steps.toLocaleString(), icon: Footprints, color: "#10b981" },
                         calories: { label: "Kalorie", value: `${dayData.calories.toFixed(1)} kcal`, icon: Flame, color: "#f59e0b" },

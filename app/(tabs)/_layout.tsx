@@ -13,6 +13,8 @@ export default function TabsLayout() {
   const currentGradientId = isEditing ? draftGradient?.id : gradient?.id;
   const getInactiveColors = (id: number) => {
     switch (id) {
+      case 0:
+        return "#a21caf";
       case 1:
         return "#a21caf";
       case 2:

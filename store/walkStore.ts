@@ -15,8 +15,11 @@ type WalkState = {
   name: string;
   difficulty: "Łatwy" | "Średni" | "Trudny" | "";
   note:string;
-  templatePoints: Point[]; // New field for the guide route
+  templatePoints: Point[];
+  startTime: number | null;
 
+
+  setStartTime: (time: number | null) => void;
   setPoints: (points: Point[]) => void;
   setTemplatePoints: (points: Point[]) => void;
 
@@ -46,8 +49,10 @@ export const useWalkStore = create<WalkState>((set) => ({
   difficulty: "",
   note: "",
   templatePoints: [],
+  startTime: null,
 
 
+  setStartTime: (time) => set({ startTime: time }),
   setPoints: (points) => set({ points }),
   setTemplatePoints: (templatePoints) => set({ templatePoints }),
 
@@ -72,14 +77,17 @@ export const useWalkStore = create<WalkState>((set) => ({
   })),
 
   startWalk: () =>
-    set({
+    set((state) => ({
       isWalking: true,
-    }),
+      startTime: Date.now() - (state.duration * 1000),
+    })),
 
   stopWalk: () =>
-    set({
+    set((state) => ({
       isWalking: false,
-    }),
+      duration: state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : state.duration,
+      startTime: null,
+    })),
 
 
   resetWalk: () =>

@@ -22,7 +22,7 @@ const RecentActivity = () => {
                         <Text className="text-gray-700 font-semibold text-lg">{activity.name}</Text>
                         <View className="flex-row items-center justify-between gap-2 pb-3">
                             <Text className="text-gray-500 border-r border-gray-200 pr-2">{formatDate(activity.finishedAt || activity.createdAt)}</Text>
-                            <Text className="text-green-500 font-medium border-r border-gray-200 pr-2">{formatDistance(activity.distance)}</Text>
+                            <Text className="text-green-500 font-medium border-r border-gray-200 pr-2">{formatDistance(activity.distance,true)}</Text>
                             <Text className="text-blue-500 font-medium border-r border-gray-200 pr-2">{activity.duration} min</Text>
                             <Text className="text-orange-500 font-medium">{activity.steps} kroków</Text>
                         </View>

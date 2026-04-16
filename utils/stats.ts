@@ -7,7 +7,7 @@ export const calculateGoalProgress = (goal: Goal, walks: SavedWalk[]) => {
 
     walks.forEach(walk => {
         if(!walk.finished) return;
-        const walkDate = new Date(walk.finishedAt || walk.createdAt).getTime();
+        const walkDate = new Date(walk.createdAt).getTime();
         
         if(walkDate >= goalStart) {
             if(goal.type === "km") current += walk.distance / 1000;
@@ -51,7 +51,7 @@ export const getThisWeekStats = (walks: SavedWalk[]) => {
     startOfWeek.setHours(0, 0, 0, 0);
     
     return walks.reduce((acc, walk) => {
-       const walkDate = new Date(walk.finishedAt || walk.createdAt);
+       const walkDate = new Date(walk.createdAt);
        if(walkDate >= startOfWeek && walk.finished){
         acc.distance += walk.distance;
         acc.duration += walk.duration;
@@ -92,7 +92,7 @@ export const getDailyStats = (walks: SavedWalk[]) => {
 
     walks.forEach(walk => {
         if(!walk.finished) return;
-        const walkDate = new Date(walk.finishedAt || walk.createdAt);
+        const walkDate = new Date(walk.createdAt);
         const dayIndex = (walkDate.getDay() + 6) % 7;
 
         if(walkDate >= startOfWeek && walkDate <= endOfWeek){
@@ -125,7 +125,7 @@ export const getMonthStats = (walks: SavedWalk[]) => {
 
     walks.forEach(walk => {
         if(!walk.finished) return;
-        const walkDate = new Date(walk.finishedAt || walk.createdAt);
+        const walkDate = new Date(walk.createdAt);
         const monthIndex = walkDate.getMonth(); // 0-11
 
         result[monthIndex].distance += walk.distance;
@@ -137,6 +137,7 @@ export const getMonthStats = (walks: SavedWalk[]) => {
 
     return result;
 }
+
 
 export const formatDate = (date: string) => {
     const d = new Date(date);
