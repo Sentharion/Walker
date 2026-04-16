@@ -1,7 +1,7 @@
-import MonthCard from "../components/stats/MonthCard";
-import { ScrollView, View } from "react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
 import { getMonthStats } from "@/utils/stats";
+import { ScrollView, View } from "react-native";
+import MonthCard from "../components/stats/MonthCard";
 
 const MonthsScreen = () => {
     const walks = useSavedWalkStore((state) => state.savedWalks);

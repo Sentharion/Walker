@@ -31,8 +31,9 @@ const StartWalks = () => {
         setDifficulty(selectedWalk.difficulty);
         setNote(selectedWalk.note);
 
-        if (selectedWalk.duration > 0) {
+        if (selectedWalk.duration > 0 || selectedWalk.finished) {
             setPoints(selectedWalk.points);
+            setTemplatePoints(selectedWalk.templatePoints || []);
             setDistance(selectedWalk.distance);
             setDuration(() => selectedWalk.duration);
             setSteps(selectedWalk.steps);

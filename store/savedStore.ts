@@ -17,6 +17,7 @@ export type SavedWalk = {
     steps: number;
     calories: number;
     points: Point[];
+    templatePoints?: Point[]; // Original route if any
     finished:boolean;
     note: string;
     createdAt: string;

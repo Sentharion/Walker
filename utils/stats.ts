@@ -143,9 +143,17 @@ export const formatDate = (date: string) => {
     return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-export const formatDistance = (distance: number) => {
-    if(distance >= 1000){
-        return `${(distance / 1000).toFixed(1)} km`;
+export const formatDistance = (distance: number, units?: boolean) => {
+    if(units){
+        if(distance >= 1000){
+            return `${(distance / 1000).toFixed(1)} km`;
+        }
+        return `${distance} m`;
     }
-    return `${distance} m`;
+    else {
+        if(distance >= 1000){
+            return `${(distance / 1000).toFixed(1)}`;
+        }
+        return `${distance}`;
+    }
 }

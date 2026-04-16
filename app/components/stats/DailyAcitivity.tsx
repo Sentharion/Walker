@@ -1,8 +1,8 @@
-import { Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { CalendarCheck, MapPin, Clock, Flame, Footprints } from "lucide-react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
-import { getDailyStats,formatDistance } from "@/utils/stats";
+import { formatDistance, getDailyStats } from "@/utils/stats";
+import { LinearGradient } from "expo-linear-gradient";
+import { CalendarCheck, Clock, Flame, Footprints, MapPin } from "lucide-react-native";
+import { Text, View } from "react-native";
 
 
 const DailyAcitivity = () => {

@@ -1,46 +1,34 @@
-import StartandStop from "../components/livewalk/StartandStop";
-import WalkStats from "../components/livewalk/WalkStats";
-import Timer from "../components/livewalk/Timer";
-import LiveMap from "../components/livewalk/LiveMap";
-import { ScrollView, View } from "react-native";
-import { useEffect } from "react";
-import { useWalkStore } from "@/store/walkStore";
 import { useSavedWalkStore } from "@/store/savedStore";
+import { useWalkStore } from "@/store/walkStore";
 import { updateWalkStorage } from "@/utils/walksStorage";
+import { useEffect } from "react";
+import { ScrollView, View } from "react-native";
+import LiveMap from "../components/livewalk/LiveMap";
+import StartandStop from "../components/livewalk/StartandStop";
+import Timer from "../components/livewalk/Timer";
+import WalkStats from "../components/livewalk/WalkStats";
 
 const LiveWalkScreen = () => {
     useEffect(() => {
         return () => {
-            // Auto-save stats when leaving the screen (back arrow, etc.)
             const walkState = useWalkStore.getState();
             const savedState = useSavedWalkStore.getState();
             const selectedWalk = savedState.selectedWalk;
 
-            // Skip if walk was already finished via the "Zakończ" button
             if (selectedWalk) {
                 const currentWalk = savedState.savedWalks.find(w => w.id === selectedWalk.id);
                 const alreadyFinished = currentWalk?.finished;
 
-                if (!alreadyFinished && (walkState.duration > 0 || walkState.distance > 0)) {
-                    // Use GPS-recorded points if available, otherwise keep the original route
-                    const savedPoints = walkState.points.length > 0 
-                        ? walkState.points 
-                        : (walkState.templatePoints.length > 0 ? walkState.templatePoints : currentWalk?.points || []);
-                    
-                    // Keep original distance if user hasn't walked
-                    const savedDistance = walkState.distance > 0 
-                        ? walkState.distance 
-                        : (currentWalk?.distance || 0);
-
+                if (!alreadyFinished && (walkState.duration > 0 || walkState.points.length > 0)) {
                     const updatedData = {
-                        points: savedPoints,
-                        distance: savedDistance,
+                        points: walkState.points,
+                        templatePoints: walkState.templatePoints.length > 0 ? walkState.templatePoints : currentWalk?.templatePoints,
+                        distance: walkState.distance > 0 ? walkState.distance : (currentWalk?.distance || 0),
                         duration: walkState.duration,
                         steps: walkState.steps,
                         calories: walkState.calories,
                     };
 
-                    // Update in-memory store (save progress, not finish)
                     useSavedWalkStore.setState((state) => ({
                         savedWalks: state.savedWalks.map((w) =>
                             w.id === selectedWalk.id ? { ...w, ...updatedData } : w
@@ -50,14 +38,9 @@ const LiveWalkScreen = () => {
                             : state.selectedWalk,
                     }));
 
-                    // Persist to AsyncStorage
                     updateWalkStorage(selectedWalk.id, updatedData);
                 }
             }
-
-            // Stop walk and reset on exit
-            useWalkStore.getState().stopWalk();
-            useWalkStore.getState().resetWalk();
         };
     }, []);
 
@@ -75,4 +58,4 @@ const LiveWalkScreen = () => {
     );
 };
 
-export default LiveWalkScreen;
+export default LiveWalkScreen;

@@ -63,8 +63,9 @@ const WalkCard = ({walk}: WalkCardProps) => {
         setDifficulty(walk.difficulty);
         setNote(walk.note);
 
-        if (walk.duration > 0) {
+        if (walk.duration > 0 || walk.finished) {
             setPoints(walk.points);
+            setTemplatePoints(walk.templatePoints || []);
             setDistance(walk.distance);
             setDuration(() => walk.duration);
             setSteps(walk.steps);

@@ -12,7 +12,10 @@ const SaveWalkScreen = () => {
     return (
         <ScrollView className="flex-1 bg-gray-50">
             <Details/>
-            <RoutePreview points={selectedWalk?.points || []}/>
+            <RoutePreview 
+                points={selectedWalk?.points || []} 
+                templatePoints={selectedWalk?.templatePoints || []}
+            />
             <SavedNote/>
             <StartWalks/>
             <DeleteWalk/>

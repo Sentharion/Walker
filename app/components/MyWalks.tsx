@@ -1,9 +1,9 @@
-import { ChevronRight } from "lucide-react-native";
-import { Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
 import { useSavedWalkStore } from "@/store/savedStore";
-import WalkCard from "./WalkCard";
+import { useRouter } from "expo-router";
+import { ChevronRight } from "lucide-react-native";
 import { useEffect } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import WalkCard from "./WalkCard";
 
 const MyWalks = () => {
     const router = useRouter();

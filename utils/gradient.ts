@@ -2,15 +2,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const GRADIENT_KEY = "user_gradient";
 
-export type Gradient = [string, string];
+export type Gradient = {
+    id: number;
+    colors: [string, string];
+}
 
 export const getGradient = async (): Promise<Gradient> => {
     try {
         const gradient = await AsyncStorage.getItem(GRADIENT_KEY);
-        return gradient ? JSON.parse(gradient) : ["#a855f7", "#db2777"];
+        if (gradient) {
+            const parsed = JSON.parse(gradient);
+            if (parsed && Array.isArray(parsed.colors)) {
+                return parsed;
+            }
+        }
+        return {id: 0, colors: ["#a855f7", "#db2777"]};
     } catch (error) {
         console.error("Błąd przy pobieraniu gradientu:", error);
-        return ["#a855f7", "#db2777"];
+        return {id: 0, colors: ["#a855f7", "#db2777"]};
     }
 };
 
