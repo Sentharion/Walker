@@ -61,7 +61,7 @@ const AllTime = () => {
                 id: 5,
                 title: "Spalone kalorie",
                 subTitle: "Spalone kalorie",
-                value: stats.calories.toFixed(1),
+                value: Math.floor(stats.calories),
                 subValue: "kcal",
                 icon: <Flame size={18} color="white" />,
                 color: "red",

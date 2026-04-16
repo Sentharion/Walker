@@ -35,7 +35,6 @@ export default function RootLayout() {
   const [fadeAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {
-    // Ukrywamy brzydki natywny splash od razu, po to by wjechał nasz fejk na React Native
     SplashScreen.hideAsync();
   }, []);
 
@@ -45,14 +44,11 @@ export default function RootLayout() {
     const inAuthGroup = segments[0] === 'screens' && segments[1] === 'LoginScreen';
 
     if (!session && !inAuthGroup) {
-      // Redirect to the login page if they are not logged in
       router.replace('/screens/LoginScreen');
     } else if (session && inAuthGroup) {
-      // Redirect to the home page if they are logged in
       router.replace('/(tabs)');
     }
 
-    // Płynne, animowane chowanie naszego fejk-splasha kiedy aplikacja się ładuje
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 350,

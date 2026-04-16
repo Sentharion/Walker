@@ -30,7 +30,7 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
             icon: Flame,
             color: "red",
             label: "Spalone kalorie",
-            value: calories.toFixed(1),
+            value: Math.floor(calories),
             unit: "Kalorie"
         },
         steps: {
