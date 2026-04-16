@@ -52,7 +52,6 @@ export default function LoginScreen() {
         setLoading(true);
         try {
             await signInWithUsername(username, password);
-            Alert.alert("Sukces", "Zalogowano");
             router.replace("/(tabs)");
         } catch (error: any) {
             Alert.alert("Błąd", error.message || "Wystąpił błąd podczas logowania");

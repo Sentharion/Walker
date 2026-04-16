@@ -60,11 +60,8 @@ export async function deleteAccount() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return;
 
-    // Delete all user related data
     await supabase.from('walks').delete().eq('user_id', user.id);
     await supabase.from('goals').delete().eq('user_id', user.id);
     await supabase.from('profiles').delete().eq('id', user.id);
-
-    // Sign out (Final step)
     await supabase.auth.signOut();
 }
