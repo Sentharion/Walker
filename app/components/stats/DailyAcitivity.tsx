@@ -1,5 +1,5 @@
 import { useSavedWalkStore } from "@/store/savedStore";
-import { formatDistance, getDailyStats } from "@/utils/stats";
+import { formatDistance, formatTime, getDailyStats } from "@/utils/stats";
 import { LinearGradient } from "expo-linear-gradient";
 import { CalendarCheck, Clock, Flame, Footprints, MapPin } from "lucide-react-native";
 import { Text, View } from "react-native";
@@ -25,7 +25,7 @@ const DailyAcitivity = () => {
 
                     const tab = {
                         distance: { label: "Dystans", value: `${formatDistance(dayData.distance,true)}`, icon: MapPin, color: "#3b82f6" },
-                        duration: { label: "Czas", value: `${Math.floor(dayData.duration / 60)} min`, icon: Clock, color: "#ef4444" },
+                        duration: { label: "Czas", value: `${formatTime(dayData.duration,true)}`, icon: Clock, color: "#ef4444" },
                         steps: { label: "Kroki", value: dayData.steps.toLocaleString(), icon: Footprints, color: "#10b981" },
                         calories: { label: "Kalorie", value: `${Math.floor(dayData.calories)}`, icon: Flame, color: "#f59e0b" },
                     };

@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import { Pause, Play, Square } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useWalkStore } from "../../../store/walkStore";
+import { saveWalkOnline } from "../../../lib/walks";
+import * as Crypto from 'expo-crypto';
 
 
 const StartandStop = () => {
@@ -15,6 +17,8 @@ const StartandStop = () => {
     const { points, distance, duration, steps, calories } = useWalkStore();
     const selectedWalk = useSavedWalkStore((state) => state.selectedWalk);
     const finishWalk = useSavedWalkStore((state) => state.finishWalk);
+    const addSavedWalk = useSavedWalkStore((state) => state.addSavedWalk);
+    const name = useWalkStore((state) => state.name);
 
     const handleToggle = () => {
         if(isWalking) {
@@ -44,6 +48,38 @@ const StartandStop = () => {
                 steps,
                 calories
             });
+        } else {
+            const walkId = Crypto.randomUUID();
+            const newWalk = {
+                id: walkId,
+                name: name || "Nowy spacer",
+                difficulty: (useWalkStore.getState().difficulty as any) || "Średni",
+                distance,
+                note: useWalkStore.getState().note || "",
+                points,
+                duration: finalDuration,
+                steps,
+                calories,
+                finished: true,
+                createdAt: new Date().toISOString(),
+                finishedAt: new Date().toISOString(),
+            };
+            await addSavedWalk(newWalk);
+            try {
+                await saveWalkOnline({
+                    name: newWalk.name,
+                    difficulty: newWalk.difficulty,
+                    distance: newWalk.distance,
+                    duration: newWalk.duration,
+                    steps: newWalk.steps,
+                    calories: newWalk.calories,
+                    note: newWalk.note,
+                    finished: newWalk.finished,
+                    createdAt: newWalk.createdAt,
+                }, points, walkId);
+            } catch (e) {
+                console.error("Error saving new walk online:", e);
+            }
         }
         stopWalk();
         resetWalk();

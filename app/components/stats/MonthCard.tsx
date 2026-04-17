@@ -3,6 +3,7 @@ import {View ,Text, TouchableOpacity} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { monthGradients } from "@/types/types";
+import { getTimeDisplay } from "@/utils/stats";
 
 interface MonthCardProps {
     month: string;
@@ -23,8 +24,8 @@ const MonthCard = ({month, walks, distance, time, calories, steps, showYear}: Mo
             icon: Clock,
             color: "blue",
             label: "Czas",
-            value: time > 60 ? (time / 60).toFixed(1) : time,
-            unit: time > 60 ? "Godzin" : "Minut"
+            value: getTimeDisplay(time).value,
+            unit: getTimeDisplay(time).unit
         },
         calories: {
             icon: Flame,

@@ -2,7 +2,7 @@ import { TrendingUp, Trophy, MapPin, Clock, Footprints } from "lucide-react-nati
 import { Text, View } from "react-native";
 import { useSavedWalkStore } from "../../../store/savedStore";
 import { getRecords,formatDate, getStreak } from "../../../utils/profileStats";
-import {formatDistance} from "../../../utils/stats";
+import {formatDistance, formatTime} from "../../../utils/stats";
 
 
 const MyRecords = () => {
@@ -15,16 +15,16 @@ const MyRecords = () => {
         {
             id: "walk",
             name: "Najdłuższy dystans",
-            value: formatDistance(myRecords?.distance.distance),
-            date: formatDate(myRecords?.distance.finishedAt || myRecords?.distance.createdAt),
+            value: formatDistance(myRecords?.distance.distance,true),
+            date: formatDate(myRecords?.distance.finishedAt),
             icon: <MapPin size={14} color="#22c55e" />,
             bgColor: "bg-green-50",
         },
         {
             id: "time",
             name: "Najdłuższy czas",
-            value: myRecords?.time.duration.toFixed(0) + " min",
-            date: formatDate(myRecords?.time.finishedAt || myRecords?.time.createdAt),
+            value: formatTime(myRecords?.time.duration,true),
+            date: formatDate(myRecords?.time.finishedAt),
             icon: <Clock size={14} color="#3b82f6" />,
             bgColor: "bg-blue-50",
         },
@@ -32,7 +32,7 @@ const MyRecords = () => {
             id: "steps",
             name: "Najwięcej kroków",
             value: myRecords?.steps.steps.toFixed(0) + " kroków",
-            date: formatDate(myRecords?.steps.finishedAt || myRecords?.steps.createdAt),
+            date: formatDate(myRecords?.steps.finishedAt),
             icon: <Footprints size={14} color="#f97316" />,
             bgColor: "bg-orange-50",
         },

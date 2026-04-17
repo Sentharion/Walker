@@ -4,12 +4,12 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { View, Text, ImageBackground, Animated } from 'react-native';
-import { useSavedWalkStore } from '@/store/savedStore';
 import { cssInterop } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
 import MapView from 'react-native-maps';
 import { useSession } from '../hooks/auto-login';
 import { useEffect, useState } from 'react';
+import { useSavedWalkStore } from '@/store/savedStore';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -26,6 +26,7 @@ cssInterop(MapView, {
 export default function RootLayout() {
   const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
   const difficulty = useSavedWalkStore((state: any) => state.selectedWalk?.difficulty);
+  const loadSavedWalks = useSavedWalkStore((state) => state.loadSavedWalks);
   
   const { session, loading } = useSession();
   const segments = useSegments();
@@ -37,6 +38,12 @@ export default function RootLayout() {
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      loadSavedWalks();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (loading) return;

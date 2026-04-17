@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import { Calendar, MapPin, Clock, Footprints, Flame } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSavedWalkStore } from "@/store/savedStore";
-import { getThisWeekStats } from "@/utils/stats";
+import { getThisWeekStats, getTimeDisplay } from "@/utils/stats";
 
 
 const ThisWeekStats = () => {
@@ -44,8 +44,8 @@ const ThisWeekStats = () => {
                             <Text className="text-gray-600 font-semibold text-sm">Czas</Text>
                         </View>
                         <View className="flex-col gap-1">
-                            <Text className="text-black font-semibold text-3xl">{stats.duration}</Text>
-                            <Text className="text-gray-500  text-xs">Minut</Text>
+                            <Text className="text-black font-semibold text-3xl">{getTimeDisplay(stats.duration).value}</Text>
+                            <Text className="text-gray-500  text-xs">{getTimeDisplay(stats.duration).unit}</Text>
                         </View>
                     </View>
                 </View>

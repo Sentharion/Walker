@@ -1,6 +1,5 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import { useRouter } from "expo-router";
-import { saveWalk } from "@/utils/walksStorage";
 import { useWalkStore, type Point } from "@/store/walkStore";
 import { useSavedWalkStore, type SavedWalk } from "@/store/savedStore";
 import { saveWalkOnline } from "../../../lib/walks";
@@ -41,8 +40,7 @@ const SaveWalk = ({distance,points}:SaveWalkProps) => {
         };
 
         try {
-            await saveWalk(newWalk);
-            addSavedWalk(newWalk);
+        await addSavedWalk(newWalk);
 
             await saveWalkOnline({
                 name: newWalk.name,

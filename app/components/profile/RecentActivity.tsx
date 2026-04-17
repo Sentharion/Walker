@@ -2,7 +2,7 @@ import { MapPin } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { useSavedWalkStore } from "../../../store/savedStore";
 import { formatDate, getRecentWalks } from "../../../utils/profileStats";
-import { formatDistance } from "../../../utils/stats";
+import { formatDistance, formatTime } from "../../../utils/stats";
 
 const RecentActivity = () => {
     const { savedWalks } = useSavedWalkStore();
@@ -21,9 +21,9 @@ const RecentActivity = () => {
                        <View className="flex-col items-start justify-between gap-1">
                         <Text className="text-gray-700 font-semibold text-lg">{activity.name}</Text>
                         <View className="flex-row items-center justify-between gap-2 pb-3">
-                            <Text className="text-gray-500 border-r border-gray-200 pr-2">{formatDate(activity.finishedAt || activity.createdAt)}</Text>
+                            <Text className="text-gray-500 border-r border-gray-200 pr-2">{formatDate(activity.finishedAt)}</Text>
                             <Text className="text-green-500 font-medium border-r border-gray-200 pr-2">{formatDistance(activity.distance,true)}</Text>
-                            <Text className="text-blue-500 font-medium border-r border-gray-200 pr-2">{activity.duration} min</Text>
+                            <Text className="text-blue-500 font-medium border-r border-gray-200 pr-2">{formatTime(activity.duration,true)}</Text>
                             <Text className="text-orange-500 font-medium">{activity.steps} kroków</Text>
                         </View>
                        </View>
