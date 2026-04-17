@@ -1,11 +1,20 @@
 import { Text, View } from "react-native";
 import { MapPin, Flame, Route, Clock, Footprints } from "lucide-react-native";
 import { useSavedWalkStore } from "@/store/savedStore";
-import { getAllTimeStats, formatDistance } from "@/utils/stats";
+import { getAllTimeStats, formatDistance, getTimeDisplay } from "@/utils/stats";
 
 
 
-const colors: Record<string, string> = {
+const bgColors50: Record<string, string> = {
+  green: "bg-green-50",
+  blue: "bg-blue-50",
+  red: "bg-red-50",
+  purple: "bg-purple-50",
+  lime: "bg-lime-50",
+  orange: "bg-orange-50",
+};
+
+const bgColors500: Record<string, string> = {
   green: "bg-green-500",
   blue: "bg-blue-500",
   red: "bg-red-500",
@@ -26,7 +35,7 @@ const AllTime = () => {
                 title: "Dystans",
                 subTitle: "Suma kilometrów",
                 value: formatDistance(stats.distance),
-                subValue: "km",
+                subValue: stats.distance >= 1000 ? "Kilometry" : "Metry",
                 icon: <MapPin size={18} color="white" />,
                 color: "green",
             },
@@ -34,8 +43,8 @@ const AllTime = () => {
                 id: 2,
                 title: "Czas",
                 subTitle: "Czas spędzony na spacerach",
-                value: stats.duration,
-                subValue: "min",
+                value: getTimeDisplay(stats.duration).value,
+                subValue: getTimeDisplay(stats.duration).unit,
                 icon: <Clock size={18} color="white" />,
                 color: "blue",
             },
@@ -44,7 +53,7 @@ const AllTime = () => {
                 title: "Kroki",
                 subTitle: "Suma kroków",
                 value: stats.steps,
-                subValue: "kroki",
+                subValue: "Kroki",
                 icon: <Footprints size={18} color="white" />,
                 color: "orange",
             },
@@ -62,7 +71,7 @@ const AllTime = () => {
                 title: "Spalone kalorie",
                 subTitle: "Spalone kalorie",
                 value: Math.floor(stats.calories),
-                subValue: "kcal",
+                subValue: "Kcal",
                 icon: <Flame size={18} color="white" />,
                 color: "red",
             },
@@ -75,10 +84,10 @@ const AllTime = () => {
             </View>
             <View className="flex-col gap-2">
                 {Stats.map((stat) => (
-                    <View key={stat.id} className={`flex-1 bg-${stat.color}-50 backdrop-blur rounded-2xl p-4`}>
+                    <View key={stat.id} className={`flex-1 ${bgColors50[stat.color]} backdrop-blur rounded-2xl overflow-hidden p-4`}>
                         <View className="flex-row items-center justify-between">
                             <View className="flex-row items-center gap-2">
-                                <View className={`rounded-2xl bg-${stat.color}-500 p-2 w-10 h-10 flex-row items-center justify-center`}>
+                                <View className={`rounded-2xl overflow-hidden ${bgColors500[stat.color]} p-2 w-10 h-10 flex-row items-center justify-center`}>
                                     {stat.icon}
                                 </View>
                                 <View className="flex-col">

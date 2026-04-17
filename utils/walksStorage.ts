@@ -39,11 +39,14 @@ export const removeWalk = async (id: string) => {
 export const updateWalkStorage = async (id: string, updatedWalk: any) => {
     try {
         const existing = await AsyncStorage.getItem(WALKS_STORAGE_KEY);
-        if (existing) {
-            const walks = JSON.parse(existing);
-            const updated = walks.map((w: any) => w.id === id ? { ...w, ...updatedWalk } : w);
-            await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(updated));
+        const walks = existing ? JSON.parse(existing) : [];
+        const index = walks.findIndex((w: any) => String(w.id) === String(id));
+        if (index !== -1) {
+            walks[index] = { ...walks[index], ...updatedWalk };
+        } else {
+            walks.push({ id, ...updatedWalk });
         }
+        await AsyncStorage.setItem(WALKS_STORAGE_KEY, JSON.stringify(walks));
     } catch (error) {
         console.log("Błąd aktualizacji spaceru", error);
     }

@@ -64,6 +64,30 @@ export async function saveWalkOnline(walk: WalkData, points: Point[], localId?: 
     return data;
 }
 
+export async function updateWalkOnline(walkId: string, updates: Partial<WalkData>) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const dbUpdates: Record<string, any> = {};
+    if (updates.finished !== undefined) dbUpdates.finished = updates.finished;
+    if (updates.distance !== undefined) dbUpdates.distance = updates.distance;
+    if (updates.duration !== undefined) dbUpdates.duration = updates.duration;
+    if (updates.steps !== undefined) dbUpdates.steps = updates.steps;
+    if (updates.calories !== undefined) dbUpdates.calories = updates.calories;
+    if (updates.note !== undefined) dbUpdates.note = updates.note;
+
+    const { error } = await supabase
+        .from('walks')
+        .update(dbUpdates)
+        .eq('id', walkId)
+        .eq('user_id', user.id);
+
+    if (error) {
+        console.error('Error updating walk online:', error);
+        throw error;
+    }
+}
+
 export async function loadWalksOnline() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return [];

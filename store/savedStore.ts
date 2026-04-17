@@ -1,7 +1,7 @@
-import { getWalks, updateWalkStorage, removeWalk } from "@/utils/walksStorage";
+import { getWalks, saveWalk, updateWalkStorage, removeWalk } from "@/utils/walksStorage";
 import { Alert } from "react-native";
 import { create } from "zustand";
-import { loadWalksOnline, deleteWalkOnline } from "../lib/walks";
+import { loadWalksOnline, deleteWalkOnline, updateWalkOnline } from "../lib/walks";
 
 type Point = {
     latitude: number;
@@ -26,7 +26,7 @@ export type SavedWalk = {
 
 type walkStore = {
     savedWalks: SavedWalk[];
-    addSavedWalk: (walk: SavedWalk) => void;
+    addSavedWalk: (walk: SavedWalk) => Promise<void>;
     removeSavedWalk: (id: string) => void;
     selectedWalk: SavedWalk | null;
     setSelectedWalk: (walk: SavedWalk) => void;
@@ -38,7 +38,10 @@ type walkStore = {
 
 export const useSavedWalkStore = create<walkStore>((set, get) => ({
     savedWalks: [],
-    addSavedWalk: (walk) => set((state) => ({ savedWalks: [...state.savedWalks, walk] })),
+    addSavedWalk: async (walk) => {
+        set((state) => ({ savedWalks: [...state.savedWalks, walk] }));
+        await saveWalk(walk);
+    },
     removeSavedWalk: async (id) => {
         const walkToDelete = get().savedWalks.find(w => String(w.id) === String(id));
         const createdAt = walkToDelete?.createdAt;
@@ -64,11 +67,20 @@ export const useSavedWalkStore = create<walkStore>((set, get) => ({
         selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, note } : state.selectedWalk
     })),
     finishWalk: async (id, data) => {
+        const finishedAt = new Date().toISOString();
+        const finalData = { ...data, finished: true, finishedAt };
         set((state) => ({
-            savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, ...data, finished: true, finishedAt: new Date().toISOString() } : w),
-            selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, ...data, finished: true, finishedAt: new Date().toISOString() } : state.selectedWalk
+            savedWalks: state.savedWalks.map((w) => w.id === id ? { ...w, ...finalData } : w),
+            selectedWalk: state.selectedWalk?.id === id ? { ...state.selectedWalk, ...finalData } : state.selectedWalk
         }));
-        await updateWalkStorage(id, { ...data, finished: true, finishedAt: new Date().toISOString() });
+        const fullWalk = get().savedWalks.find(w => w.id === id);
+        const storageData = fullWalk ? { ...fullWalk } : finalData;
+        await updateWalkStorage(id, storageData);
+        try {
+            await updateWalkOnline(id, { finished: true, ...data });
+        } catch (e) {
+            console.error('Failed to update walk online:', e);
+        }
     },
 
     loadSavedWalks: async () => {

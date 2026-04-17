@@ -139,6 +139,45 @@ export const getMonthStats = (walks: SavedWalk[]) => {
 }
 
 
+export const getTimeDisplay = (time: number) => {
+  if (time < 60) {
+    return {
+      value: time,
+      unit: "Sekundy",
+    };
+  }
+
+  if (time < 3600) {
+    return {
+      value: Math.floor(time / 60),
+      unit: "Minuty",
+    };
+  }
+
+  return {
+    value: Math.floor(time / 3600),
+    unit: "Godziny",
+  };
+};
+
+
+export const formatTime = (seconds: number,units?: boolean) => {
+  if (seconds < 60) {
+    if(units) return `${seconds} s`;
+    return seconds;
+  }
+
+  if (seconds < 3600) {
+    const m = Math.floor(seconds / 60);
+    if(units) return `${m} min`;
+    return m;
+  }
+
+  const h = Math.floor(seconds / 3600);
+  if(units) return `${h} h`;
+  return h;
+};
+
 export const formatDate = (date: string) => {
     const d = new Date(date);
     return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
