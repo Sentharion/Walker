@@ -25,7 +25,7 @@ const ProfileInfo = () => {
     const gradients: { id: number; colors: [string, string] }[] = [
         { id: 1, colors: ["#a855f7", "#db2777"] },
         { id: 2, colors: ["#f97316", "#ef4444"] },
-        { id: 3, colors: ["#f5f5dc", "#e0cd95"] },
+        { id: 3, colors: ["#f5f5dc", "#ede8d0"] },
         { id: 4, colors: ["#fff1f2", "#fecdd3"] },
         { id: 5, colors: ["#0061ff", "#60efff"] },
         { id: 7, colors: ["#ff930f", "#fff95b"] },

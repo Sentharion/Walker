@@ -54,7 +54,6 @@ export const useSavedWalkStore = create<walkStore>((set, get) => ({
         await removeWalk(id);
         try {
             await deleteWalkOnline(id, createdAt);
-            Alert.alert("Sukces", "Pomyślnie usunięto spacer");
         } catch (e: any) {
             console.error("Failed to delete walk from Supabase", e);
             Alert.alert("Błąd usuwania", `Błąd z bazy: ${e?.message || JSON.stringify(e)}`);
