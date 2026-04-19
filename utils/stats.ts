@@ -47,7 +47,7 @@ export const getThisWeekStats = (walks: SavedWalk[]) => {
     const now = new Date();
 
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+    startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
     startOfWeek.setHours(0, 0, 0, 0);
     
     return walks.reduce((acc, walk) => {
@@ -160,6 +160,20 @@ export const getTimeDisplay = (time: number) => {
   };
 };
 
+export const formatDuration = (seconds: number) => {
+  if (seconds < 60) {
+    return `${seconds} s`;
+  }
+
+  if (seconds < 3600) {
+    const m = Math.floor(seconds / 60);
+    return `${m} min`;
+  }
+
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return `${h} h ${m} min`;
+};
 
 export const formatTime = (seconds: number,units?: boolean) => {
   if (seconds < 60) {

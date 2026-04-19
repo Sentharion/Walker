@@ -10,7 +10,15 @@ import WalkStats from "../components/livewalk/WalkStats";
 
 const LiveWalkScreen = () => {
     useEffect(() => {
+        // Periodic sync to get background tracking updates while the app is in foreground
+        const syncInterval = setInterval(() => {
+            if (useWalkStore.getState().isWalking) {
+                useWalkStore.persist.rehydrate();
+            }
+        }, 5000);
+
         return () => {
+            clearInterval(syncInterval);
             const walkState = useWalkStore.getState();
             const savedState = useSavedWalkStore.getState();
             const selectedWalk = savedState.selectedWalk;

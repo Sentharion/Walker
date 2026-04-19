@@ -4,41 +4,57 @@ import MapView, {Polyline, Marker, PROVIDER_DEFAULT} from "react-native-maps";
 import { useRef, useEffect } from "react";
 import { useWalkStore } from "../../../store/walkStore";
 import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
 
 const LiveMap = () => {
     const mapRef = useRef<MapView>(null);
     const points = useWalkStore((state) => state.points);
-    const templatePoints = useWalkStore((state) => state.templatePoints);
-    const addPoint = useWalkStore((state) => state.addPoint);
+    const templatePoints = useWalkStore((state) => state.templatePoints);;
     const isWalking = useWalkStore((state) => state.isWalking);
+    const LOCATION_TASK_NAME = 'background-location-task';
 
     useEffect(() => {
-        let subscription: Location.LocationSubscription;
-        const startTracking  = async () =>{
-            const {status} = await Location.requestForegroundPermissionsAsync();
-            if(status !== 'granted'){
-                console.log('Zezwolenie na dostęp do lokalizacji zostało odrzucone');
-                return;
-            }
-            subscription = await Location.watchPositionAsync({
-                accuracy: Location.Accuracy.BestForNavigation,
-                distanceInterval: 5,
-                timeInterval: 3000,
-            }, (location) => {
-                if(!isWalking) return;
-                addPoint({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
+        const manageTracking = async () => {
+            if (isWalking) {
+                const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+                const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
+                const { status: notifStatus } = await Notifications.requestPermissionsAsync();
+
+                if (fgStatus !== 'granted') {
+                    console.log("Brak zgody na lokalizację (foreground)");
+                    return;
+                }
+
+                if (bgStatus !== 'granted') {
+                    console.log("Brak zgody na lokalizację w tle");
+                }
+
+                if (notifStatus !== 'granted') {
+                    console.log("Brak zgody na powiadomienia");
+                }
+
+                await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                    accuracy: Location.Accuracy.Highest,
+                    distanceInterval: 5,
+                    timeInterval: 5000,
+                    showsBackgroundLocationIndicator: true,
+                    foregroundService: {
+                        notificationTitle: 'Walker – trwa spacer 🚶',
+                        notificationBody: 'Śledzenie Twojej aktywności...',
+                        notificationColor: '#10b981',
+                    },
                 });
-            });
+            } else {
+                const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+                if (hasStarted) {
+                    await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                }
+            }
         }
-        startTracking();
-        return () => {
-            subscription?.remove();
-        };
-    }, [isWalking, addPoint]); // Added addPoint to deps to fix lint
+        manageTracking();
+    }, [isWalking]);
     useEffect(() => {
-        const last = points[points.length - 1] || templatePoints[0]; // fallback to template start
+        const last = points[points.length - 1] || templatePoints[0];
         if((points.length > 0 || templatePoints.length > 0) && mapRef.current && last){
             mapRef.current.animateToRegion({
                 latitude: last.latitude,

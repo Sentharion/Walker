@@ -16,11 +16,12 @@ const Timer = () => {
                 setDuration(duration);
             }, 1000);
 
-            const handleAppStateChange = (nextAppState: AppStateStatus) => {
+            const handleAppStateChange = async (nextAppState: AppStateStatus) => {
                 if (nextAppState === "active") {
                     const now = Date.now();
                     const duration = Math.floor((now - startTime) / 1000);
                     setDuration(duration);
+                    await useWalkStore.persist.rehydrate();
                 }
             };
             const subscription = AppState.addEventListener("change", handleAppStateChange);

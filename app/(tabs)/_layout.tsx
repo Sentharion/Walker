@@ -14,7 +14,7 @@ export default function TabsLayout() {
   const getInactiveColors = (id: number) => {
     switch (id) {
       case 0:
-        return "#a21caf";
+        return "#059669";
       case 1:
         return "#a21caf";
       case 2:
@@ -60,7 +60,7 @@ export default function TabsLayout() {
       return "#ffffff";
     }
     if(id === 3) {
-      return "#4b1d2a";
+      return "#C19A6B";
     } else if(id === 4) {
       return "#ec4899";
     }
@@ -77,7 +77,7 @@ export default function TabsLayout() {
       return "#ffffff";
     }
     if(id === 3) {
-      return "#4b1d2a";
+      return "#C19A6B";
     } else if(id === 4) {
       return "#f472b6";
     }
@@ -102,7 +102,7 @@ export default function TabsLayout() {
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={(isEditing ? draftGradient?.colors : gradient?.colors) || ['#a855f7', '#db2777']}
+            colors={(isEditing ? draftGradient?.colors : gradient?.colors) || ["#10b981", "#14b8a6"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={{ flex: 1 }}

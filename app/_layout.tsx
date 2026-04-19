@@ -12,6 +12,10 @@ import { useEffect, useState } from 'react';
 import { useSavedWalkStore } from '@/store/savedStore';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
+import { useWalkStore } from '@/store/walkStore';
+import { getDistance } from 'geolib';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,6 +26,90 @@ cssInterop(LinearGradient, {
 cssInterop(MapView, {
   className: 'style',
 });
+
+
+const LOCATION_TASK_NAME = 'background-location-task';
+
+
+
+let lastNotifyTime = 0;
+
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+  if (error) {
+    console.error('Background Location Error:', error);
+    return;
+  }
+
+  if (data) {
+    const { locations } = data as { locations: Location.LocationObject[] };
+    if (!locations || locations.length === 0) return;
+
+    await useWalkStore.persist.rehydrate();
+    const currentState = useWalkStore.getState();
+    
+    if (!currentState.isWalking) return;
+
+    const newPoint = {
+      latitude: locations[0].coords.latitude,
+      longitude: locations[0].coords.longitude,
+    };
+
+    let updatedDistance = currentState.distance;
+    let updatedSteps = currentState.steps;
+    let updatedCalories = currentState.calories;
+    const prevPoints = [...currentState.points];
+    
+    if (prevPoints.length >= 1) {
+      const prevPoint = prevPoints[prevPoints.length - 1];
+      const segmentDistance = getDistance(prevPoint, newPoint);
+
+      if (segmentDistance >= 1) {
+        if (!currentState.templatePoints || currentState.templatePoints.length === 0) {
+            updatedDistance += segmentDistance;
+        }
+        
+        const newSteps = Math.round(segmentDistance / 0.75);
+        updatedSteps += (newSteps > 0 ? newSteps : 1);
+        updatedCalories += segmentDistance * 0.05;
+      }
+    }
+
+    const now = Date.now();
+    const elapsedSec = currentState.startTime
+      ? Math.floor((now - currentState.startTime) / 1000)
+      : currentState.duration;
+
+    useWalkStore.setState({
+      points: [...prevPoints, newPoint],
+      distance: updatedDistance,
+      steps: updatedSteps,
+      calories: updatedCalories,
+      duration: elapsedSec
+    });
+
+    if (now - lastNotifyTime > 5000) {
+      lastNotifyTime = now;
+      
+      try {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.Balanced,
+          distanceInterval: 5,
+          timeInterval: 5000,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: 'Walker – spacer trwa 🚶',
+            notificationBody: `Kroki: ${updatedSteps} | ${Math.floor(updatedCalories)} kcal`,
+            notificationColor: '#10b981',
+          },
+        });
+      } catch (err) {
+        console.error("Notification update failed:", err);
+      }
+    }
+  }
+});
+
+
 
 export default function RootLayout() {
   const name = useSavedWalkStore((state: any) => state.selectedWalk?.name);
